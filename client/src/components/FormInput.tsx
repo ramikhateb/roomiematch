@@ -40,8 +40,8 @@ function FormInput({
         onChange={onChange}
         className={`${inputBase} ${
           error
-            ? 'border-red-500/50 bg-red-500/[0.07] focus:border-red-400/40'
-            : 'border-white/[0.1] bg-zinc-950/60 focus:border-cyan-400/35'
+            ? 'border-red-500/50 bg-red-500/7 focus:border-red-400/40'
+            : 'border-white/10 bg-zinc-950/60 focus:border-cyan-400/35'
         }`}
       />
 

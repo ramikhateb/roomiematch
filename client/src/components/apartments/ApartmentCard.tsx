@@ -10,7 +10,7 @@ function ApartmentCard({ apartment }: ApartmentCardProps) {
     'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80'
 
   return (
-    <article className="group overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-white/[0.03] shadow-[0_28px_90px_-40px_rgba(0,0,0,0.85)] backdrop-blur-sm transition duration-300 hover:border-white/15 hover:shadow-[0_32px_100px_-36px_rgba(34,211,238,0.12)]">
+    <article className="group overflow-hidden rounded-[1.75rem] border border-white/8 bg-white/3 shadow-[0_28px_90px_-40px_rgba(0,0,0,0.85)] backdrop-blur-sm transition duration-300 hover:border-white/15 hover:shadow-[0_32px_100px_-36px_rgba(34,211,238,0.12)]">
       <div className="relative">
         <img
           src={imageSrc}
@@ -40,7 +40,7 @@ function ApartmentCard({ apartment }: ApartmentCardProps) {
           </p>
         </div>
 
-        <div className="mb-4 grid grid-cols-3 gap-2 rounded-xl border border-white/[0.06] bg-zinc-950/40 p-3.5 text-sm">
+        <div className="mb-4 grid grid-cols-3 gap-2 rounded-xl border border-white/6 bg-zinc-950/40 p-3.5 text-sm">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               Rooms
@@ -69,25 +69,25 @@ function ApartmentCard({ apartment }: ApartmentCardProps) {
 
         <div className="mb-5 flex flex-wrap gap-2">
           {apartment.isFurnished && (
-            <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-200">
+            <span className="rounded-full border border-white/8 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-200">
               Furnished
             </span>
           )}
 
           {apartment.hasParking && (
-            <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-200">
+            <span className="rounded-full border border-white/8 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-200">
               Parking
             </span>
           )}
 
           {apartment.hasElevator && (
-            <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-200">
+            <span className="rounded-full border border-white/8 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-200">
               Elevator
             </span>
           )}
 
           {apartment.hasBalcony && (
-            <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-200">
+            <span className="rounded-full border border-white/8 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-200">
               Balcony
             </span>
           )}
@@ -96,14 +96,14 @@ function ApartmentCard({ apartment }: ApartmentCardProps) {
         <div className="flex gap-2.5">
           <button
             type="button"
-            className="flex-1 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110"
+            className="flex-1 rounded-xl bg-linear-to-r from-cyan-400 to-violet-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110"
           >
             View details
           </button>
 
           <button
             type="button"
-            className="rounded-xl border border-white/[0.12] bg-white/[0.03] px-4 py-3 text-sm font-medium text-zinc-100 transition hover:border-white/20 hover:bg-white/[0.06]"
+            className="rounded-xl border border-white/12 bg-white/3 px-4 py-3 text-sm font-medium text-zinc-100 transition hover:border-white/20 hover:bg-white/6"
           >
             Save
           </button>
