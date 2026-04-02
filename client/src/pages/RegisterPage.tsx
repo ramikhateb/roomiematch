@@ -1,15 +1,70 @@
 import { useState } from 'react'
+import type { ChangeEvent } from 'react'
+import { Link } from 'react-router-dom'
 import FormInput from '../components/FormInput'
+import FormSelect from '../components/FormSelect'
+import FormTextarea from '../components/FormTextarea'
 import { registerUser } from '../services/authService'
 import type { RegisterErrors, RegisterFormData, RegisterPayload } from '../types/auth'
-import { validateRegisterForm } from '../utils/validators'
+import { formDataToPreferences, validateRegisterForm } from '../utils/validators'
 
 const initialFormData: RegisterFormData = {
   fullName: '',
   email: '',
   password: '',
   budget: '',
+  preferredAreas: '',
+  housingSituation: '',
+  sleepSchedule: '',
+  cleanliness: '',
+  noiseTolerance: '',
+  smoking: '',
+  pets: '',
+  guestsComfort: '',
+  lifestyleNotes: '',
 }
+
+const housingOptions = [
+  { value: 'need_room', label: 'I need a room in a shared place' },
+  { value: 'have_room', label: 'I have a place and need a roommate' },
+  { value: 'either', label: 'Either could work for me' },
+] as const
+
+const sleepOptions = [
+  { value: 'early', label: 'Early riser — quiet mornings matter' },
+  { value: 'late', label: 'Night owl — I am active later' },
+  { value: 'flexible', label: 'Flexible / varies' },
+] as const
+
+const cleanlinessOptions = [
+  { value: 'tidy', label: 'Very tidy — surfaces clear most days' },
+  { value: 'moderate', label: 'Moderate — weekly reset, lived-in ok' },
+  { value: 'relaxed', label: 'Relaxed — I clean when it bothers me' },
+] as const
+
+const noiseOptions = [
+  { value: 'quiet', label: 'I need a quiet home most of the time' },
+  { value: 'moderate', label: 'Moderate — some music/TV is fine' },
+  { value: 'social_ok', label: 'Social — occasional gatherings are ok' },
+] as const
+
+const smokingOptions = [
+  { value: 'non_smoker_only', label: 'Non-smoking home only' },
+  { value: 'outdoor_ok', label: 'Outdoor smoking only is ok' },
+  { value: 'smoking_ok', label: 'Smoking inside is ok with me' },
+] as const
+
+const petOptions = [
+  { value: 'no_pets', label: 'No pets (allergies or preference)' },
+  { value: 'have_pets', label: 'I have a pet or plan to' },
+  { value: 'open_to_pets', label: 'Open to a roommate with pets' },
+] as const
+
+const guestOptions = [
+  { value: 'rarely', label: 'Rarely — mostly just us at home' },
+  { value: 'sometimes', label: 'Sometimes — friends over now and then' },
+  { value: 'often', label: 'Often — I like a more social home' },
+] as const
 
 function RegisterPage() {
   const [formData, setFormData] = useState<RegisterFormData>(initialFormData)
@@ -17,7 +72,11 @@ function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) {
     const { name, value } = event.target
 
     setFormData((prev) => ({
@@ -49,6 +108,7 @@ function RegisterPage() {
       email: formData.email.trim().toLowerCase(),
       password: formData.password,
       budget: Number(formData.budget),
+      preferences: formDataToPreferences(formData),
     }
 
     try {
@@ -67,68 +127,203 @@ function RegisterPage() {
     }
   }
 
+  const sectionTitle = (title: string, subtitle: string) => (
+    <div className="pt-2">
+      <h2 className="text-sm font-semibold text-white">{title}</h2>
+      <p className="mt-1 text-xs leading-relaxed text-zinc-500">{subtitle}</p>
+    </div>
+  )
+
   return (
-    <div className="mx-auto max-w-md px-6 py-16">
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h1 className="mb-2 text-3xl font-bold">Create Account</h1>
-        <p className="mb-6 text-slate-300">
-          Join RoomieMatch and start finding the right roommate.
-        </p>
-
-        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-          <FormInput
-            label="Full Name"
-            name="fullName"
-            placeholder="Your full name"
-            value={formData.fullName}
-            error={errors.fullName}
-            onChange={handleChange}
-          />
-
-          <FormInput
-            label="Email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            value={formData.email}
-            error={errors.email}
-            onChange={handleChange}
-          />
-
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            placeholder="Create a password"
-            value={formData.password}
-            error={errors.password}
-            onChange={handleChange}
-          />
-
-          <FormInput
-            label="Monthly Budget"
-            name="budget"
-            type="text"
-            placeholder="e.g. 4500"
-            value={formData.budget}
-            error={errors.budget}
-            onChange={handleChange}
-          />
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSubmitting ? 'Creating account...' : 'Register'}
-          </button>
-        </form>
-
-        {successMessage ? (
-          <p className="mt-4 rounded-xl bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
-            {successMessage}
+    <div className="mx-auto max-w-3xl px-5 py-14 sm:px-6 sm:py-20">
+      <div className="relative">
+        <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-cyan-400/15 via-transparent to-violet-400/15 blur-xl" />
+        <div className="relative rounded-[1.75rem] border border-white/[0.08] bg-white/[0.03] p-8 shadow-[0_24px_80px_-32px_rgba(0,0,0,0.8)] backdrop-blur-md sm:p-9">
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            Set up your profile
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+            Account basics plus the habits and boundaries that actually decide
+            whether a share works—so we can match on criteria, not just rent.
           </p>
-        ) : null}
+
+          <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>
+            {sectionTitle(
+              'Account',
+              'How you sign in. Matching uses the sections below.'
+            )}
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <FormInput
+                  label="Full name"
+                  name="fullName"
+                  placeholder="Your full name"
+                  value={formData.fullName}
+                  error={errors.fullName}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <FormInput
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                error={errors.email}
+                onChange={handleChange}
+              />
+
+              <FormInput
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="At least 6 characters"
+                value={formData.password}
+                error={errors.password}
+                onChange={handleChange}
+              />
+            </div>
+
+            {sectionTitle(
+              'Budget & area',
+              'What you can pay and where you want to live.'
+            )}
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FormInput
+                label="Monthly budget (you + utilities ballpark)"
+                name="budget"
+                type="text"
+                placeholder="e.g. 4500"
+                value={formData.budget}
+                error={errors.budget}
+                onChange={handleChange}
+              />
+
+              <div className="sm:col-span-2">
+                <FormInput
+                  label="Preferred neighborhoods / cities"
+                  name="preferredAreas"
+                  placeholder="e.g. Florentin, Jaffa — or Ramat Gan near the park"
+                  value={formData.preferredAreas}
+                  error={errors.preferredAreas}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <FormSelect
+                  label="Your housing situation"
+                  name="housingSituation"
+                  value={formData.housingSituation}
+                  options={[...housingOptions]}
+                  error={errors.housingSituation}
+                  onChange={handleChange}
+                  placeholder="Where are you in the search?"
+                />
+              </div>
+            </div>
+
+            {sectionTitle(
+              'Living preferences',
+              'Honest answers here = better roommate fits.'
+            )}
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FormSelect
+                label="Sleep & schedule"
+                name="sleepSchedule"
+                value={formData.sleepSchedule}
+                options={[...sleepOptions]}
+                error={errors.sleepSchedule}
+                onChange={handleChange}
+              />
+
+              <FormSelect
+                label="Cleanliness"
+                name="cleanliness"
+                value={formData.cleanliness}
+                options={[...cleanlinessOptions]}
+                error={errors.cleanliness}
+                onChange={handleChange}
+              />
+
+              <FormSelect
+                label="Noise & atmosphere"
+                name="noiseTolerance"
+                value={formData.noiseTolerance}
+                options={[...noiseOptions]}
+                error={errors.noiseTolerance}
+                onChange={handleChange}
+              />
+
+              <FormSelect
+                label="Smoking"
+                name="smoking"
+                value={formData.smoking}
+                options={[...smokingOptions]}
+                error={errors.smoking}
+                onChange={handleChange}
+              />
+
+              <FormSelect
+                label="Pets"
+                name="pets"
+                value={formData.pets}
+                options={[...petOptions]}
+                error={errors.pets}
+                onChange={handleChange}
+              />
+
+              <FormSelect
+                label="Guests & social rhythm"
+                name="guestsComfort"
+                value={formData.guestsComfort}
+                options={[...guestOptions]}
+                error={errors.guestsComfort}
+                onChange={handleChange}
+              />
+
+              <div className="sm:col-span-2">
+                <FormTextarea
+                  label="Anything else we should know? (optional)"
+                  name="lifestyleNotes"
+                  placeholder="Allergies, WFH needs, Kosher kitchen, practice times, deal-breakers…"
+                  value={formData.lifestyleNotes}
+                  error={errors.lifestyleNotes}
+                  onChange={handleChange}
+                  hint="Short is fine — this helps explain context your clicks cannot."
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-violet-400 py-3.5 text-sm font-semibold text-zinc-950 shadow-[0_0_28px_-6px_rgba(34,211,238,0.45)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:brightness-100"
+            >
+              {isSubmitting ? 'Saving your profile…' : 'Create account'}
+            </button>
+          </form>
+
+          {successMessage ? (
+            <p className="mt-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200/95">
+              {successMessage}
+            </p>
+          ) : null}
+
+          <p className="mt-6 text-center text-sm text-zinc-500">
+            Already registered?{' '}
+            <Link
+              to="/login"
+              className="font-semibold text-cyan-300/90 underline-offset-4 hover:text-cyan-200 hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )

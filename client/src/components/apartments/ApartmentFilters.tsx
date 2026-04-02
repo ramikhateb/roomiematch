@@ -8,38 +8,43 @@ type ApartmentFiltersProps = {
   onReset: () => void
 }
 
+const fieldClass =
+  'rounded-xl border border-white/[0.1] bg-zinc-950/55 px-4 py-3 text-sm text-white outline-none ring-cyan-400/25 placeholder:text-zinc-600 focus:border-cyan-400/35 focus:ring-2'
+
 function ApartmentFilters({
   filters,
   onChange,
   onReset,
 }: ApartmentFiltersProps) {
   return (
-    <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur">
-      <div className="mb-5 flex items-center justify-between">
+    <div className="rounded-[1.75rem] border border-white/[0.08] bg-white/[0.03] p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:p-6">
+      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white">Find apartments</h2>
-          <p className="text-sm text-slate-300">
-            Search by city, budget, rooms, and features
+          <h2 className="text-lg font-bold text-white sm:text-xl">
+            Refine your search
+          </h2>
+          <p className="mt-1 text-sm text-zinc-400">
+            Stack filters until the map matches what you actually need.
           </p>
         </div>
 
         <button
           type="button"
           onClick={onReset}
-          className="rounded-2xl border border-white/10 px-4 py-2 text-sm text-white transition hover:bg-white/5"
+          className="shrink-0 rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-white/20 hover:bg-white/[0.06]"
         >
-          Reset
+          Clear all
         </button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <input
           type="text"
           name="search"
-          placeholder="Search city..."
+          placeholder="Keyword or area"
           value={filters.search}
           onChange={onChange}
-          className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none placeholder:text-slate-400"
+          className={fieldClass}
         />
 
         <input
@@ -48,25 +53,25 @@ function ApartmentFilters({
           placeholder="City"
           value={filters.city}
           onChange={onChange}
-          className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none placeholder:text-slate-400"
+          className={fieldClass}
         />
 
         <input
           type="number"
           name="minPrice"
-          placeholder="Min price"
+          placeholder="Min ₪ / month"
           value={filters.minPrice}
           onChange={onChange}
-          className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none placeholder:text-slate-400"
+          className={fieldClass}
         />
 
         <input
           type="number"
           name="maxPrice"
-          placeholder="Max price"
+          placeholder="Max ₪ / month"
           value={filters.maxPrice}
           onChange={onChange}
-          className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none placeholder:text-slate-400"
+          className={fieldClass}
         />
 
         <input
@@ -75,14 +80,14 @@ function ApartmentFilters({
           placeholder="Rooms"
           value={filters.rooms}
           onChange={onChange}
-          className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none placeholder:text-slate-400"
+          className={fieldClass}
         />
 
         <select
           name="status"
           value={filters.status}
           onChange={onChange}
-          className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none"
+          className={fieldClass}
         >
           <option value="">Any status</option>
           <option value="available">Available</option>
@@ -91,22 +96,24 @@ function ApartmentFilters({
           <option value="inactive">Inactive</option>
         </select>
 
-        <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white">
+        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/[0.1] bg-zinc-950/55 px-4 py-3 text-sm text-zinc-200 transition hover:border-white/15">
           <input
             type="checkbox"
             name="furnished"
             checked={filters.furnished}
             onChange={onChange}
+            className="size-4 rounded border-white/20 bg-zinc-900 text-cyan-400 focus:ring-cyan-400/40"
           />
           Furnished
         </label>
 
-        <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white">
+        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/[0.1] bg-zinc-950/55 px-4 py-3 text-sm text-zinc-200 transition hover:border-white/15">
           <input
             type="checkbox"
             name="parking"
             checked={filters.parking}
             onChange={onChange}
+            className="size-4 rounded border-white/20 bg-zinc-900 text-cyan-400 focus:ring-cyan-400/40"
           />
           Parking
         </label>

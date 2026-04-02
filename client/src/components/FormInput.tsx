@@ -5,8 +5,13 @@ type FormInputProps = {
   placeholder?: string
   value: string
   error?: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => void
 }
+
+const inputBase =
+  'w-full rounded-xl border px-4 py-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:ring-2 ring-cyan-400/35'
 
 function FormInput({
   label,
@@ -19,7 +24,10 @@ function FormInput({
 }: FormInputProps) {
   return (
     <div>
-      <label htmlFor={name} className="mb-2 block text-sm font-medium">
+      <label
+        htmlFor={name}
+        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-500"
+      >
         {label}
       </label>
 
@@ -30,15 +38,15 @@ function FormInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full rounded-xl border px-4 py-3 outline-none transition ${
+        className={`${inputBase} ${
           error
-            ? 'border-red-500 bg-red-500/5'
-            : 'border-white/10 bg-slate-900'
+            ? 'border-red-500/50 bg-red-500/[0.07] focus:border-red-400/40'
+            : 'border-white/[0.1] bg-zinc-950/60 focus:border-cyan-400/35'
         }`}
       />
 
       {error ? (
-        <p className="mt-2 text-sm text-red-400">{error}</p>
+        <p className="mt-2 text-sm text-red-300/95">{error}</p>
       ) : null}
     </div>
   )

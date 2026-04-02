@@ -1,0 +1,79 @@
+import type { ChangeEvent } from 'react'
+
+type Option = { value: string; label: string }
+
+type FormSelectProps = {
+  label: string
+  name: string
+  value: string
+  options: readonly Option[]
+  error?: string
+  placeholder?: string
+  onChange: (event: ChangeEvent<HTMLSelectElement>) => void
+}
+
+const selectBase =
+  'w-full cursor-pointer appearance-none rounded-xl border border-white/[0.1] bg-zinc-950/60 px-4 py-3 pr-10 text-sm outline-none transition focus:border-cyan-400/35 focus:ring-2 ring-cyan-400/35'
+
+function FormSelect({
+  label,
+  name,
+  value,
+  options,
+  error,
+  placeholder = 'Choose one',
+  onChange,
+}: FormSelectProps) {
+  return (
+    <div>
+      <label
+        htmlFor={name}
+        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-500"
+      >
+        {label}
+      </label>
+
+      <div className="relative">
+        <select
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          className={`${selectBase} ${
+            error ? 'border-red-500/50 bg-red-500/[0.07]' : ''
+          } ${value === '' ? 'text-zinc-500' : 'text-zinc-100'}`}
+        >
+          <option value="" disabled>
+            ─ {placeholder} ─
+          </option>
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value} className="bg-zinc-900">
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <span
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500"
+          aria-hidden
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
+      </div>
+
+      {error ? <p className="mt-2 text-sm text-red-300/95">{error}</p> : null}
+    </div>
+  )
+}
+
+export default FormSelect

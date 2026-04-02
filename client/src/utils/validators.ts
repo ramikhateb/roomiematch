@@ -1,4 +1,16 @@
-import type { RegisterErrors, RegisterFormData } from '../types/auth'
+import type {
+  RegisterErrors,
+  RegisterFormData,
+  RoommatePreferences,
+} from '../types/auth'
+
+const HOUSING = new Set(['need_room', 'have_room', 'either'])
+const SLEEP = new Set(['early', 'late', 'flexible'])
+const CLEAN = new Set(['tidy', 'moderate', 'relaxed'])
+const NOISE = new Set(['quiet', 'moderate', 'social_ok'])
+const SMOKING = new Set(['non_smoker_only', 'outdoor_ok', 'smoking_ok'])
+const PETS = new Set(['no_pets', 'have_pets', 'open_to_pets'])
+const GUESTS = new Set(['rarely', 'sometimes', 'often'])
 
 export function validateRegisterForm(data: RegisterFormData): RegisterErrors {
   const errors: RegisterErrors = {}
@@ -33,5 +45,53 @@ export function validateRegisterForm(data: RegisterFormData): RegisterErrors {
     }
   }
 
+  if (!data.preferredAreas.trim()) {
+    errors.preferredAreas = 'Add at least one neighborhood or city you want'
+  } else if (data.preferredAreas.trim().length < 2) {
+    errors.preferredAreas = 'Please be a bit more specific about the area'
+  }
+
+  if (!data.housingSituation || !HOUSING.has(data.housingSituation)) {
+    errors.housingSituation = 'Choose the option that fits you best'
+  }
+
+  if (!data.sleepSchedule || !SLEEP.has(data.sleepSchedule)) {
+    errors.sleepSchedule = 'Tell us about your sleep rhythm'
+  }
+
+  if (!data.cleanliness || !CLEAN.has(data.cleanliness)) {
+    errors.cleanliness = 'How do you keep things day to day?'
+  }
+
+  if (!data.noiseTolerance || !NOISE.has(data.noiseTolerance)) {
+    errors.noiseTolerance = 'What level of noise feels livable?'
+  }
+
+  if (!data.smoking || !SMOKING.has(data.smoking)) {
+    errors.smoking = 'Set your smoking boundary'
+  }
+
+  if (!data.pets || !PETS.has(data.pets)) {
+    errors.pets = 'What is true for you with pets?'
+  }
+
+  if (!data.guestsComfort || !GUESTS.has(data.guestsComfort)) {
+    errors.guestsComfort = 'How often are guests comfortable for you?'
+  }
+
   return errors
+}
+
+export function formDataToPreferences(data: RegisterFormData): RoommatePreferences {
+  return {
+    preferredAreas: data.preferredAreas.trim(),
+    housingSituation: data.housingSituation as RoommatePreferences['housingSituation'],
+    sleepSchedule: data.sleepSchedule as RoommatePreferences['sleepSchedule'],
+    cleanliness: data.cleanliness as RoommatePreferences['cleanliness'],
+    noiseTolerance: data.noiseTolerance as RoommatePreferences['noiseTolerance'],
+    smoking: data.smoking as RoommatePreferences['smoking'],
+    pets: data.pets as RoommatePreferences['pets'],
+    guestsComfort: data.guestsComfort as RoommatePreferences['guestsComfort'],
+    lifestyleNotes: data.lifestyleNotes.trim(),
+  }
 }
