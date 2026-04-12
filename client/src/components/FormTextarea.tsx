@@ -12,7 +12,7 @@ type FormTextareaProps = {
 }
 
 const areaBase =
-  'w-full resize-y rounded-xl border px-4 py-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:ring-2 ring-cyan-400/35'
+  'w-full resize-y rounded-xl border px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-2 ring-cyan-200'
 
 function FormTextarea({
   label,
@@ -28,7 +28,7 @@ function FormTextarea({
     <div>
       <label
         htmlFor={name}
-        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-500"
+        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600"
       >
         {label}
       </label>
@@ -42,16 +42,16 @@ function FormTextarea({
         onChange={onChange}
         className={`${areaBase} ${
           error
-            ? 'border-red-500/50 bg-red-500/7 focus:border-red-400/40'
-            : 'border-white/10 bg-zinc-950/60 focus:border-cyan-400/35'
+            ? 'border-red-300 bg-red-50 focus:border-red-400'
+            : 'border-slate-300 bg-white focus:border-cyan-500'
         }`}
       />
 
       {hint ? (
-        <p className="mt-1.5 text-xs text-zinc-500">{hint}</p>
+        <p className="mt-1.5 text-xs text-slate-600">{hint}</p>
       ) : null}
 
-      {error ? <p className="mt-2 text-sm text-red-300/95">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm text-red-600">{error}</p> : null}
     </div>
   )
 }

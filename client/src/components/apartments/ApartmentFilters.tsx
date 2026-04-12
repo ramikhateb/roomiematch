@@ -9,7 +9,7 @@ type ApartmentFiltersProps = {
 }
 
 const fieldClass =
-  'rounded-xl border border-white/10 bg-zinc-950/55 px-4 py-3 text-sm text-white outline-none ring-cyan-400/25 placeholder:text-zinc-600 focus:border-cyan-400/35 focus:ring-2'
+  'rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none ring-cyan-400/25 placeholder:text-zinc-600 focus:border-cyan-400/35 focus:ring-2'
 
 function ApartmentFilters({
   filters,
@@ -17,13 +17,13 @@ function ApartmentFilters({
   onReset,
 }: ApartmentFiltersProps) {
   return (
-    <div className="rounded-[1.75rem] border border-white/8 bg-white/3 p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:p-6">
+    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:p-6">
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-lg font-bold text-white sm:text-xl">
+          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
             Refine your search
           </h2>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-slate-600">
             Stack filters until the map matches what you actually need.
           </p>
         </div>
@@ -31,7 +31,7 @@ function ApartmentFilters({
         <button
           type="button"
           onClick={onReset}
-          className="shrink-0 rounded-xl border border-white/10 bg-white/3 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-white/20 hover:bg-white/6"
+          className="shrink-0 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
         >
           Clear all
         </button>
@@ -96,24 +96,24 @@ function ApartmentFilters({
           <option value="inactive">Inactive</option>
         </select>
 
-        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-zinc-950/55 px-4 py-3 text-sm text-zinc-200 transition hover:border-white/15">
+        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
           <input
             type="checkbox"
             name="furnished"
             checked={filters.furnished}
             onChange={onChange}
-            className="size-4 rounded border-white/20 bg-zinc-900 text-cyan-400 focus:ring-cyan-400/40"
+            className="size-4 rounded border-slate-300 bg-zinc-900 text-cyan-400 focus:ring-cyan-400/40"
           />
           Furnished
         </label>
 
-        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-zinc-950/55 px-4 py-3 text-sm text-zinc-200 transition hover:border-white/15">
+        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
           <input
             type="checkbox"
             name="parking"
             checked={filters.parking}
             onChange={onChange}
-            className="size-4 rounded border-white/20 bg-zinc-900 text-cyan-400 focus:ring-cyan-400/40"
+            className="size-4 rounded border-slate-300 bg-zinc-900 text-cyan-400 focus:ring-cyan-400/40"
           />
           Parking
         </label>

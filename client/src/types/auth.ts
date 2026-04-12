@@ -50,3 +50,52 @@ export type RegisterPayload = {
   budget: number
   preferences: RoommatePreferences
 }
+
+export type UserProfile = {
+  photoUrl: string
+  city: string
+  lifestyle: string
+  friendsCount: number
+  followingCount: number
+  bio: string
+  isPetLover: boolean
+  isSmoker: boolean
+  isStudent: boolean
+  worksFromHome: boolean
+  budgetMin: number
+  budgetMax: number
+  entryDate: string
+  prefersFurnished: boolean
+  prefersParking: boolean
+  prefersElevator: boolean
+  prefersBalcony: boolean
+  prefersYard: boolean
+  prefersPrivateBathroom: boolean
+  contactPhone: string
+  instagramUrl: string
+  facebookUrl: string
+  linkedinUrl: string
+  interestedApartments: InterestedApartment[]
+}
+
+export type InterestedApartment = {
+  id: string
+  title: string
+  city: string
+  price: number
+  imageUrl?: string | null
+}
+
+export type AuthUser = {
+  id: string
+  fullName: string
+  email: string
+  budget: number
+  preferences: RoommatePreferences
+  profile: UserProfile
+}
+
+export type LoginPayload = {
+  email: string
+  password: string
+}
