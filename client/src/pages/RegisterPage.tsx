@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import FormInput from '../components/FormInput'
 import FormSelect from '../components/FormSelect'
 import FormTextarea from '../components/FormTextarea'
@@ -67,6 +67,7 @@ const guestOptions = [
 ] as const
 
 function RegisterPage() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState<RegisterFormData>(initialFormData)
   const [errors, setErrors] = useState<RegisterErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -119,9 +120,10 @@ function RegisterPage() {
 
       setSuccessMessage(response.message)
       setFormData(initialFormData)
+      navigate('/profile')
     } catch (error) {
       console.error('Registration failed:', error)
-      setSuccessMessage('')
+      setSuccessMessage(error instanceof Error ? error.message : '')
     } finally {
       setIsSubmitting(false)
     }
@@ -129,20 +131,20 @@ function RegisterPage() {
 
   const sectionTitle = (title: string, subtitle: string) => (
     <div className="pt-2">
-      <h2 className="text-sm font-semibold text-white">{title}</h2>
-      <p className="mt-1 text-xs leading-relaxed text-zinc-500">{subtitle}</p>
+      <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+      <p className="mt-1 text-xs leading-relaxed text-slate-500">{subtitle}</p>
     </div>
   )
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-14 sm:px-6 sm:py-20">
       <div className="relative">
-        <div className="absolute -inset-1 rounded-[1.75rem] bg-linear-to-br from-cyan-400/15 via-transparent to-violet-400/15 blur-xl" />
-        <div className="relative rounded-[1.75rem] border border-white/8 bg-white/3 p-8 shadow-[0_24px_80px_-32px_rgba(0,0,0,0.8)] backdrop-blur-md sm:p-9">
-          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+        <div className="absolute -inset-1 rounded-[1.75rem] bg-linear-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-xl" />
+        <div className="relative rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-[0_20px_60px_-28px_rgba(15,23,42,0.22)] sm:p-9">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Set up your profile
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
             Account basics plus the habits and boundaries that actually decide
             whether a share works—so we can match on criteria, not just rent.
           </p>
@@ -302,7 +304,7 @@ function RegisterPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-xl bg-linear-to-r from-cyan-400 to-violet-400 py-3.5 text-sm font-semibold text-zinc-950 shadow-[0_0_28px_-6px_rgba(34,211,238,0.45)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:brightness-100"
+              className="w-full rounded-xl bg-linear-to-r from-cyan-500 to-violet-500 py-3.5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(8,145,178,0.5)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:brightness-100"
             >
               {isSubmitting ? 'Saving your profile…' : 'Create account'}
             </button>
@@ -314,11 +316,11 @@ function RegisterPage() {
             </p>
           ) : null}
 
-          <p className="mt-6 text-center text-sm text-zinc-500">
+          <p className="mt-6 text-center text-sm text-slate-500">
             Already registered?{' '}
             <Link
               to="/login"
-              className="font-semibold text-cyan-300/90 underline-offset-4 hover:text-cyan-200 hover:underline"
+              className="font-semibold text-cyan-700 underline-offset-4 hover:text-cyan-700 hover:underline"
             >
               Sign in
             </Link>

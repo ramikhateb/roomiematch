@@ -1,6 +1,7 @@
 import type { Apartment, ApartmentFilters } from '../types/apartment'
 
-const API_BASE_URL = 'http://localhost:5001/api'
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:5001/api'
 
 export async function getApartments(filters: ApartmentFilters): Promise<Apartment[]> {
   const params = new URLSearchParams()
