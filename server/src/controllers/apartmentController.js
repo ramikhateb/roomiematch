@@ -1,5 +1,18 @@
 import prisma from '../config/db.js'
 
+const QUALITY_VALUES = new Set(['old', 'renovated', 'new', 'luxury'])
+
+function normalizeQuality(value) {
+  const normalized = String(value || '')
+    .trim()
+    .toLowerCase()
+  if (normalized === 'available') return 'new'
+  if (normalized === 'reserved') return 'old'
+  if (normalized === 'rented') return 'renovated'
+  if (normalized === 'inactive') return 'old'
+  return normalized
+}
+
 export async function getAllApartments(req, res) {
   try {
     const {
@@ -7,7 +20,7 @@ export async function getAllApartments(req, res) {
       minPrice,
       maxPrice,
       rooms,
-      status,
+      quality,
       furnished,
       parking,
     } = req.query
@@ -21,8 +34,9 @@ export async function getAllApartments(req, res) {
       }
     }
 
-    if (status) {
-      filters.status = status
+    const requestedQuality = normalizeQuality(quality)
+    if (requestedQuality && QUALITY_VALUES.has(requestedQuality)) {
+      filters.quality = requestedQuality
     }
 
     if (rooms) {
@@ -76,7 +90,7 @@ export async function createApartment(req, res) {
       rooms,
       floor,
       sizeSqm,
-      status,
+      quality,
       isFurnished,
       hasParking,
       hasElevator,
@@ -84,9 +98,16 @@ export async function createApartment(req, res) {
       imageUrl,
     } = req.body
 
-    if (!title || !price || !city || !address || !rooms || !status) {
+    const normalizedQuality = normalizeQuality(quality)
+
+    if (!title || !price || !city || !address || !rooms || !normalizedQuality) {
       return res.status(400).json({
-        message: 'title, price, city, address, rooms, and status are required',
+        message: 'title, price, city, address, rooms, and quality are required',
+      })
+    }
+    if (!QUALITY_VALUES.has(normalizedQuality)) {
+      return res.status(400).json({
+        message: 'quality must be one of: old, renovated, new, luxury',
       })
     }
 
@@ -102,7 +123,7 @@ export async function createApartment(req, res) {
         rooms: Number(rooms),
         floor: floor !== undefined ? Number(floor) : null,
         sizeSqm: sizeSqm !== undefined ? Number(sizeSqm) : null,
-        status,
+        quality: normalizedQuality,
         isFurnished: Boolean(isFurnished),
         hasParking: Boolean(hasParking),
         hasElevator: Boolean(hasElevator),

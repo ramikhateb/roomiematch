@@ -24,7 +24,7 @@ model Apartment {
   rooms        Int
   floor        Int?
   sizeSqm      Int?
-  status       String
+  quality      String
   isFurnished  Boolean  @default(false)
   hasParking   Boolean  @default(false)
   hasElevator  Boolean  @default(false)
