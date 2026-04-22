@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import MotionButton from '../components/motion/MotionButton'
 import { loginUser } from '../services/authService'
 
 function LoginPage() {
@@ -75,13 +76,14 @@ function LoginPage() {
               />
             </div>
 
-            <button
+            <MotionButton
               type="submit"
+              variant="primary"
               disabled={isSubmitting}
-              className="w-full rounded-xl bg-linear-to-r from-cyan-500 to-violet-500 py-3.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(8,145,178,0.5)] transition hover:brightness-110"
+              className="w-full py-3.5 text-sm"
             >
               {isSubmitting ? 'Signing in...' : 'Sign in'}
-            </button>
+            </MotionButton>
           </form>
 
           {error ? (

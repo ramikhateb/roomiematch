@@ -14,6 +14,8 @@ import type { Apartment } from '../../types/apartment'
 
 type ApartmentMapProps = {
   apartments: Apartment[]
+  selectedApartmentId: string | null
+  onSelectApartment: (id: string | null) => void
 }
 
 const TLV_CENTER: [number, number] = [32.0853, 34.7818]
@@ -48,7 +50,11 @@ function FitMapBounds({ points }: { points: [number, number][] }) {
   return null
 }
 
-function ApartmentMap({ apartments }: ApartmentMapProps) {
+function ApartmentMap({
+  apartments,
+  selectedApartmentId,
+  onSelectApartment,
+}: ApartmentMapProps) {
   const mappableApartments = useMemo(
     () =>
       apartments.filter(
@@ -73,7 +79,7 @@ function ApartmentMap({ apartments }: ApartmentMapProps) {
         <div>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Map view</h2>
           <p className="mt-1 text-sm text-slate-600">
-            See listings on the map and open a marker for quick details.
+            Click a pin or a listing card to sync the map and the grid.
           </p>
         </div>
         <span className="rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700">
@@ -94,24 +100,33 @@ function ApartmentMap({ apartments }: ApartmentMapProps) {
           />
           <FitMapBounds points={markerPoints} />
 
-          {mappableApartments.map((apartment) => (
-            <Marker
-              key={apartment.id}
-              position={[apartment.latitude!, apartment.longitude!]}
-            >
-              <Popup>
-                <div className="max-w-[180px]">
-                  <p className="font-semibold">{apartment.title}</p>
-                  <p className="text-sm text-zinc-600">
-                    {apartment.address}, {apartment.city}
-                  </p>
-                  <p className="mt-1 text-sm font-medium">
-                    ₪{apartment.price.toLocaleString()} / mo
-                  </p>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {mappableApartments.map((apartment) => {
+            const isSelected = selectedApartmentId === apartment.id
+            return (
+              <Marker
+                key={apartment.id}
+                position={[apartment.latitude!, apartment.longitude!]}
+                zIndexOffset={isSelected ? 800 : 0}
+                eventHandlers={{
+                  click: () => {
+                    onSelectApartment(apartment.id)
+                  },
+                }}
+              >
+                <Popup>
+                  <div className="max-w-[200px]">
+                    <p className="font-semibold leading-snug">{apartment.title}</p>
+                    <p className="mt-1 text-xs text-slate-600">
+                      {apartment.address}, {apartment.city}
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-cyan-700">
+                      ₪{apartment.price.toLocaleString()} / mo
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            )
+          })}
         </MapContainer>
       </div>
 

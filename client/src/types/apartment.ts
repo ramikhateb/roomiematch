@@ -1,4 +1,4 @@
-export type ApartmentStatus = 'available' | 'reserved' | 'rented' | 'inactive'
+export type ApartmentCondition = 'old' | 'renovated' | 'new' | 'luxury'
 
 export type Apartment = {
   id: string
@@ -12,7 +12,7 @@ export type Apartment = {
   rooms: number
   floor?: number | null
   sizeSqm?: number | null
-  status: ApartmentStatus | string
+  quality: ApartmentCondition | string
   isFurnished: boolean
   hasParking: boolean
   hasElevator: boolean
@@ -27,7 +27,7 @@ export type ApartmentFilters = {
   minPrice: string
   maxPrice: string
   rooms: string
-  status: string
+  quality: string
   furnished: boolean
   parking: boolean
   search: string

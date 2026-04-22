@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import MotionButton from '../components/motion/MotionButton'
 import FormInput from '../components/FormInput'
 import FormSelect from '../components/FormSelect'
 import FormTextarea from '../components/FormTextarea'
@@ -301,13 +302,14 @@ function RegisterPage() {
               </div>
             </div>
 
-            <button
+            <MotionButton
               type="submit"
+              variant="primary"
               disabled={isSubmitting}
-              className="w-full rounded-xl bg-linear-to-r from-cyan-500 to-violet-500 py-3.5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(8,145,178,0.5)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:brightness-100"
+              className="w-full py-3.5 text-sm disabled:cursor-not-allowed disabled:opacity-55"
             >
               {isSubmitting ? 'Saving your profile…' : 'Create account'}
-            </button>
+            </MotionButton>
           </form>
 
           {successMessage ? (
