@@ -1,7 +1,16 @@
-import { Outlet } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
+const pageTransition = {
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 },
+}
+
 function MainLayout() {
+  const location = useLocation()
+
   return (
     <div className="relative min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
       <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -13,7 +22,17 @@ function MainLayout() {
       <div className="relative flex min-h-screen flex-col">
         <Navbar />
         <main className="flex-1">
-          <Outlet />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={pageTransition.initial}
+              animate={pageTransition.animate}
+              exit={pageTransition.exit}
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] as const }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>

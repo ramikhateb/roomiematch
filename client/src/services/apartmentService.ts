@@ -22,8 +22,8 @@ export async function getApartments(filters: ApartmentFilters): Promise<Apartmen
     params.append('rooms', filters.rooms.trim())
   }
 
-  if (filters.status.trim()) {
-    params.append('status', filters.status.trim())
+  if (filters.quality.trim()) {
+    params.append('quality', filters.quality.trim())
   }
 
   if (filters.furnished) {

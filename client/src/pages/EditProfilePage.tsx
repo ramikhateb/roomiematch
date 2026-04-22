@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import MotionButton from '../components/motion/MotionButton'
 import { getCurrentUser, updateCurrentUserProfile } from '../services/authService'
 
 type ProfileFormData = {
@@ -419,12 +420,9 @@ function EditProfilePage() {
 
         <div className="mt-6 flex items-center justify-between gap-3">
           {savedMessage ? <p className="text-sm text-emerald-700">{savedMessage}</p> : <span />}
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center rounded-xl bg-linear-to-r from-cyan-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(8,145,178,0.5)] transition hover:brightness-110"
-          >
+          <MotionButton type="submit" variant="primary" className="px-5 py-2.5 text-sm">
             Save changes
-          </button>
+          </MotionButton>
         </div>
       </form>
     </div>

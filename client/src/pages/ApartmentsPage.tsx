@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import ApartmentCard from '../components/apartments/ApartmentCard'
 import ApartmentFilters from '../components/apartments/ApartmentFilters'
 import ApartmentMap from '../components/apartments/ApartmentMap'
+import ErrorBoundary from '../components/ErrorBoundary'
 import { getApartments } from '../services/apartmentService'
 import type { Apartment, ApartmentFilters as ApartmentFiltersType } from '../types/apartment'
 
@@ -10,7 +12,7 @@ const initialFilters: ApartmentFiltersType = {
   minPrice: '',
   maxPrice: '',
   rooms: '',
-  status: '',
+  quality: '',
   furnished: false,
   parking: false,
   search: '',
@@ -29,7 +31,7 @@ const demoApartments: Apartment[] = [
     rooms: 3,
     floor: 3,
     sizeSqm: 82,
-    status: 'available',
+    quality: 'renovated',
     isFurnished: true,
     hasParking: false,
     hasElevator: true,
@@ -51,7 +53,7 @@ const demoApartments: Apartment[] = [
     rooms: 2,
     floor: 2,
     sizeSqm: 64,
-    status: 'available',
+    quality: 'new',
     isFurnished: false,
     hasParking: true,
     hasElevator: true,
@@ -73,7 +75,7 @@ const demoApartments: Apartment[] = [
     rooms: 2,
     floor: 1,
     sizeSqm: 58,
-    status: 'reserved',
+    quality: 'old',
     isFurnished: true,
     hasParking: false,
     hasElevator: false,
@@ -95,7 +97,7 @@ const demoApartments: Apartment[] = [
     rooms: 4,
     floor: 5,
     sizeSqm: 105,
-    status: 'available',
+    quality: 'luxury',
     isFurnished: false,
     hasParking: true,
     hasElevator: true,
@@ -114,13 +116,26 @@ function filterDemoApartments(filters: ApartmentFiltersType): Apartment[] {
   const city = filters.city.trim().toLowerCase()
   const search = filters.search.trim().toLowerCase()
 
+  const normalizeCondition = (quality: string) => {
+    const normalized = quality.trim().toLowerCase()
+    if (normalized === 'available') return 'new'
+    if (normalized === 'reserved') return 'old'
+    if (normalized === 'rented') return 'renovated'
+    if (normalized === 'inactive') return 'old'
+    return normalized
+  }
+
   return demoApartments.filter((apartment) => {
     if (city && !apartment.city.toLowerCase().includes(city)) return false
     if (search && !apartment.city.toLowerCase().includes(search)) return false
     if (min !== null && apartment.price < min) return false
     if (max !== null && apartment.price > max) return false
     if (rooms !== null && apartment.rooms !== rooms) return false
-    if (filters.status && apartment.status !== filters.status) return false
+    if (
+      filters.quality &&
+      normalizeCondition(apartment.quality) !== normalizeCondition(filters.quality)
+    )
+      return false
     if (filters.furnished && !apartment.isFurnished) return false
     if (filters.parking && !apartment.hasParking) return false
     return true
@@ -133,6 +148,7 @@ function ApartmentsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [infoMessage, setInfoMessage] = useState('')
+  const [selectedApartmentId, setSelectedApartmentId] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadApartments() {
@@ -163,6 +179,12 @@ function ApartmentsPage() {
     loadApartments()
   }, [filters])
 
+  useEffect(() => {
+    setSelectedApartmentId((prev) =>
+      prev && apartments.some((a) => a.id === prev) ? prev : null
+    )
+  }, [apartments])
+
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
@@ -188,9 +210,22 @@ function ApartmentsPage() {
     setFilters(initialFilters)
   }
 
+  function toggleSelectApartment(id: string | null) {
+    if (id === null) {
+      setSelectedApartmentId(null)
+      return
+    }
+    setSelectedApartmentId((current) => (current === id ? null : id))
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 sm:py-12">
-      <div className="mb-8 max-w-3xl">
+      <motion.div
+        className="mb-8 max-w-3xl"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
+      >
         <p className="mb-3 inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
           Listings
         </p>
@@ -204,7 +239,7 @@ function ApartmentsPage() {
           Narrow by city, budget, and must-haves—then shortlist apartments you
           can tour together without the group-chat chaos.
         </p>
-      </div>
+      </motion.div>
 
       <ApartmentFilters
         filters={filters}
@@ -212,11 +247,20 @@ function ApartmentsPage() {
         onReset={handleReset}
       />
 
-      {infoMessage ? (
-        <div className="mt-6 rounded-2xl border border-cyan-500/25 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-700">
-          {infoMessage}
-        </div>
-      ) : null}
+      <AnimatePresence mode="wait">
+        {infoMessage ? (
+          <motion.div
+            key={infoMessage}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] as const }}
+            className="mt-6 rounded-2xl border border-cyan-500/25 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-700"
+          >
+            {infoMessage}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
       <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-6">
         <p className="text-sm text-slate-500">
@@ -232,41 +276,66 @@ function ApartmentsPage() {
         </div>
       ) : null}
 
-      {isLoading ? (
-        <div className="mt-8 grid gap-5 lg:grid-cols-2">
-          <div className="h-[380px] animate-pulse rounded-[1.75rem] border border-slate-200 bg-white lg:sticky lg:top-24" />
-          <div className="grid gap-5 md:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="h-[430px] animate-pulse rounded-[1.75rem] border border-slate-200 bg-white"
+      <ErrorBoundary>
+        {isLoading ? (
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            <div className="order-2 h-[380px] animate-pulse rounded-[1.75rem] border border-slate-200 bg-white lg:order-1 lg:sticky lg:top-24" />
+            <div className="order-1 grid gap-5 md:grid-cols-2 lg:order-2">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-[430px] animate-pulse rounded-[1.75rem] border border-slate-200 bg-white"
+                />
+              ))}
+            </div>
+          </div>
+        ) : apartments.length === 0 ? (
+          <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-slate-50 px-8 py-14 text-center">
+            <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
+              Nothing turned up yet
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-sm text-slate-600">
+              Loosen a filter or try a nearby neighborhood—sometimes the right
+              listing is one tweak away.
+            </p>
+          </div>
+        ) : (
+          <motion.div
+            layout
+            className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-start"
+            transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } }}
+          >
+            <motion.div
+              layout
+              className="order-2 lg:order-1 lg:sticky lg:top-24"
+              transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } }}
+            >
+              <ApartmentMap
+                apartments={apartments}
+                selectedApartmentId={selectedApartmentId}
+                onSelectApartment={toggleSelectApartment}
               />
-            ))}
-          </div>
-        </div>
-      ) : apartments.length === 0 ? (
-        <div className="mt-8 rounded-[1.75rem] border border-slate-200 bg-slate-50 px-8 py-14 text-center">
-          <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
-            Nothing turned up yet
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-slate-600">
-            Loosen a filter or try a nearby neighborhood—sometimes the right
-            listing is one tweak away.
-          </p>
-        </div>
-      ) : (
-        <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-start">
-          <div className="lg:sticky lg:top-24">
-            <ApartmentMap apartments={apartments} />
-          </div>
+            </motion.div>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            {apartments.map((apartment) => (
-              <ApartmentCard key={apartment.id} apartment={apartment} />
-            ))}
-          </div>
-        </div>
-      )}
+            <motion.div
+              layout
+              className="order-1 grid gap-5 md:grid-cols-2 lg:order-2"
+              transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } }}
+            >
+              <AnimatePresence mode="popLayout">
+                {apartments.map((apartment) => (
+                  <ApartmentCard
+                    key={apartment.id}
+                    apartment={apartment}
+                    isHighlighted={selectedApartmentId === apartment.id}
+                    onHighlight={() => toggleSelectApartment(apartment.id)}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          </motion.div>
+        )}
+      </ErrorBoundary>
     </div>
   )
 }

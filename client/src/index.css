@@ -20,3 +20,9 @@ body {
   background: rgba(34, 211, 238, 0.25);
   color: #fafafa;
 }
+
+/* Custom react-leaflet DivIcon — remove default white tile behind marker */
+.leaflet-container .apartment-marker-active {
+  background: transparent !important;
+  border: none !important;
+}
