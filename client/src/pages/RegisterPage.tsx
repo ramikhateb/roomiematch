@@ -5,6 +5,7 @@ import MotionButton from '../components/motion/MotionButton'
 import FormInput from '../components/FormInput'
 import FormSelect from '../components/FormSelect'
 import FormTextarea from '../components/FormTextarea'
+import StatusCallout from '../components/StatusCallout'
 import { registerUser } from '../services/authService'
 import type { RegisterErrors, RegisterFormData, RegisterPayload } from '../types/auth'
 import { formDataToPreferences, validateRegisterForm } from '../utils/validators'
@@ -73,6 +74,11 @@ function RegisterPage() {
   const [errors, setErrors] = useState<RegisterErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const completionRatio = Math.round(
+    (Object.values(formData).filter((value) => String(value).trim() !== '').length /
+      Object.keys(formData).length) *
+      100
+  )
 
   function handleChange(
     event: ChangeEvent<
@@ -138,10 +144,10 @@ function RegisterPage() {
   )
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-14 sm:px-6 sm:py-20">
+    <div className="page-shell max-w-4xl">
       <div className="relative">
         <div className="absolute -inset-1 rounded-[1.75rem] bg-linear-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-xl" />
-        <div className="relative rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-[0_20px_60px_-28px_rgba(15,23,42,0.22)] sm:p-9">
+        <div className="panel relative p-8 sm:p-9">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Set up your profile
           </h1>
@@ -150,7 +156,22 @@ function RegisterPage() {
             whether a share works—so we can match on criteria, not just rent.
           </p>
 
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>
+          <div className="mt-6 panel-muted p-4">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-600">
+                Profile progress
+              </p>
+              <p className="text-xs font-semibold text-slate-700">{completionRatio}% complete</p>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+              <div
+                className="h-full rounded-full bg-linear-to-r from-cyan-500 to-violet-500 transition-[width] duration-300"
+                style={{ width: `${completionRatio}%` }}
+              />
+            </div>
+          </div>
+
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
             {sectionTitle(
               'Account',
               'How you sign in. Matching uses the sections below.'
@@ -302,20 +323,22 @@ function RegisterPage() {
               </div>
             </div>
 
-            <MotionButton
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting}
-              className="w-full py-3.5 text-sm disabled:cursor-not-allowed disabled:opacity-55"
-            >
-              {isSubmitting ? 'Saving your profile…' : 'Create account'}
-            </MotionButton>
+            <div className="sticky bottom-4 z-10 rounded-2xl border border-slate-200 bg-white/95 p-3 backdrop-blur">
+              <MotionButton
+                type="submit"
+                variant="primary"
+                disabled={isSubmitting}
+                className="w-full py-3.5 text-sm disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                {isSubmitting ? 'Saving your profile…' : 'Create account'}
+              </MotionButton>
+            </div>
           </form>
 
           {successMessage ? (
-            <p className="mt-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200/95">
-              {successMessage}
-            </p>
+            <div className="mt-5">
+              <StatusCallout tone="success">{successMessage}</StatusCallout>
+            </div>
           ) : null}
 
           <p className="mt-6 text-center text-sm text-slate-500">

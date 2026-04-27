@@ -11,7 +11,7 @@ type FormInputProps = {
 }
 
 const inputBase =
-  'w-full rounded-xl border px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-2 ring-cyan-200'
+  'w-full rounded-xl border px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/30'
 
 function FormInput({
   label,
@@ -38,6 +38,7 @@ function FormInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        aria-invalid={Boolean(error)}
         className={`${inputBase} ${
           error
             ? 'border-red-300 bg-red-50 focus:border-red-400'

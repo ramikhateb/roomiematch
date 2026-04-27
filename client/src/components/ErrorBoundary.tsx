@@ -29,7 +29,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       return (
         this.props.fallback || (
           <div className="mt-8 rounded-2xl border border-red-300 bg-red-50 px-5 py-4 text-sm text-red-700">
-            Could not render listings: {this.state.message}
+            Could not render apartments: {this.state.message}
           </div>
         )
       )

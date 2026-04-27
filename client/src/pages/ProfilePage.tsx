@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import { getCurrentUser } from '../services/authService'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import MotionButton from '../components/motion/MotionButton'
+import PageHeader from '../components/PageHeader'
+import { getCurrentUser, signOutUser } from '../services/authService'
 import type { AuthUser } from '../types/auth'
 
 function toSafeExternalUrl(value: string): string {
@@ -11,6 +13,7 @@ function toSafeExternalUrl(value: string): string {
 }
 
 function ProfilePage() {
+  const navigate = useNavigate()
   const [isReady, setIsReady] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -72,10 +75,35 @@ function ProfilePage() {
       href: toSafeExternalUrl(user.profile.linkedinUrl),
     },
   ] as const
+  const profileStrength = Math.min(
+    100,
+    [
+      Boolean(user.profile.city.trim()),
+      Boolean(user.profile.bio.trim()),
+      Boolean(user.profile.entryDate.trim()),
+      Boolean(user.profile.contactPhone.trim()),
+      user.profile.budgetMax > 0,
+    ].filter(Boolean).length * 20
+  )
+
+  function handleSignOut() {
+    signOutUser()
+    navigate('/', { replace: true })
+  }
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-10 sm:px-6 sm:py-14">
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.22)] sm:p-8">
+    <div className="page-shell max-w-6xl">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <PageHeader
+          eyebrow="Profile"
+          title={user.fullName || 'roomie.user'}
+          subtitle="Keep your habits, budget, and lifestyle fresh to improve roommate suggestions and apartment fit."
+        />
+        <MotionButton variant="outline" onClick={handleSignOut} className="shrink-0">
+          Sign out
+        </MotionButton>
+      </div>
+      <div className="panel p-6 sm:p-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
           <img
             src={previewPhoto}
@@ -98,15 +126,29 @@ function ProfilePage() {
 
             <div className="mt-4 flex gap-6 text-sm text-slate-700">
               <p>
-                <span className="font-semibold text-slate-900">{postCount}</span> posts
+                <span className="font-semibold text-slate-900">{postCount}</span> saved
               </p>
               <p>
-                <span className="font-semibold text-slate-900">{friendCount}</span> friends
+                <span className="font-semibold text-slate-900">{friendCount}</span> intros
               </p>
               <p>
-                <span className="font-semibold text-slate-900">{followingCount}</span>{' '}
-                following
+                <span className="font-semibold text-slate-900">{followingCount}</span> following
               </p>
+            </div>
+
+            <div className="mt-4 panel-muted p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-widest text-slate-600">
+                  Match readiness
+                </p>
+                <p className="text-xs font-semibold text-slate-700">{profileStrength}%</p>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                <div
+                  className="h-full rounded-full bg-linear-to-r from-cyan-500 to-violet-500"
+                  style={{ width: `${profileStrength}%` }}
+                />
+              </div>
             </div>
 
             <p className="mt-3 text-sm font-medium text-slate-900">
@@ -121,7 +163,7 @@ function ProfilePage() {
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.22)]">
+        <section className="panel p-5">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">
             Lifestyle
           </h2>
@@ -144,7 +186,7 @@ function ProfilePage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.22)] lg:col-span-2">
+        <section className="panel p-5 lg:col-span-2">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">
             Apartment preferences
           </h2>
@@ -181,7 +223,7 @@ function ProfilePage() {
         </section>
       </div>
 
-      <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.22)] sm:p-6">
+      <div className="panel mt-8 p-4 sm:p-6">
         <div className="mb-4 border-b border-slate-200 pb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
           Contact
         </div>
@@ -225,13 +267,13 @@ function ProfilePage() {
         </div>
       </div>
 
-      <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.22)] sm:p-6">
+      <div className="panel mt-8 p-4 sm:p-6">
         <div className="mb-4 border-b border-slate-200 pb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
           Interested apartments
         </div>
         {user.profile.interestedApartments.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-            Save apartments from Listings and they will appear here.
+            Save apartments from Apartments and they will appear here.
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

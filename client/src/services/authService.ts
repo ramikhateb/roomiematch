@@ -89,6 +89,10 @@ function setSession(userId: string) {
   localStorage.setItem(SESSION_KEY, userId)
 }
 
+export function signOutUser() {
+  localStorage.removeItem(SESSION_KEY)
+}
+
 export function getCurrentUser(): AuthUser | null {
   const sessionId = localStorage.getItem(SESSION_KEY)
   if (!sessionId) return null

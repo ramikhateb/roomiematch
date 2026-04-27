@@ -12,7 +12,7 @@ type FormTextareaProps = {
 }
 
 const areaBase =
-  'w-full resize-y rounded-xl border px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-2 ring-cyan-200'
+  'w-full resize-y rounded-xl border px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500/30'
 
 function FormTextarea({
   label,
@@ -40,6 +40,7 @@ function FormTextarea({
         placeholder={placeholder}
         rows={rows}
         onChange={onChange}
+        aria-invalid={Boolean(error)}
         className={`${areaBase} ${
           error
             ? 'border-red-300 bg-red-50 focus:border-red-400'

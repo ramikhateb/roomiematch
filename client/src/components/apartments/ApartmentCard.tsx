@@ -9,6 +9,7 @@ type ApartmentCardProps = {
   apartment: Apartment
   isHighlighted?: boolean
   onHighlight?: () => void
+  onHoverChange?: (id: string | null) => void
 }
 
 const cardShadow = '0 18px 44px -24px rgba(15, 23, 42, 0.18)'
@@ -34,6 +35,7 @@ function ApartmentCard({
   apartment,
   isHighlighted = false,
   onHighlight,
+  onHoverChange,
 }: ApartmentCardProps) {
   const reduce = useReducedMotion()
   const safeId = String(apartment.id ?? '')
@@ -111,6 +113,10 @@ function ApartmentCard({
             }
       }
       onClick={handleCardBackgroundClick}
+      onMouseEnter={() => onHoverChange?.(safeId)}
+      onMouseLeave={() => onHoverChange?.(null)}
+      onFocus={() => onHoverChange?.(safeId)}
+      onBlur={() => onHoverChange?.(null)}
       role={onHighlight ? 'button' : undefined}
       tabIndex={onHighlight ? 0 : undefined}
       onKeyDown={

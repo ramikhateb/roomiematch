@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import FormInput from '../components/FormInput'
+import FormTextarea from '../components/FormTextarea'
+import PageHeader from '../components/PageHeader'
+import StatusCallout from '../components/StatusCallout'
 import MotionButton from '../components/motion/MotionButton'
 import { getCurrentUser, updateCurrentUserProfile } from '../services/authService'
 
@@ -102,7 +106,9 @@ function EditProfilePage() {
     setIsReady(true)
   }, [])
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) {
     const { name, value, type } = event.target
     setSavedMessage('')
     setFormData((prev) => ({
@@ -156,20 +162,17 @@ function EditProfilePage() {
   if (!isAuthenticated) return <Navigate to="/login" replace />
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-10 sm:px-6 sm:py-14">
+    <div className="page-shell max-w-4xl">
+      <PageHeader
+        eyebrow="Profile"
+        title="Edit your profile"
+        subtitle="Fine-tune your lifestyle and apartment preferences to improve match quality."
+      />
       <form
         onSubmit={handleSave}
-        className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.22)] sm:p-8"
+        className="panel p-6 sm:p-8"
       >
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Profile
-            </p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
-              Edit profile
-            </h1>
-          </div>
+        <div className="mb-6 flex items-center justify-end">
           <Link
             to="/profile"
             className="rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700"
@@ -180,28 +183,22 @@ function EditProfilePage() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Full name
-            </label>
-            <input
+            <FormInput
+              label="Full name"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Your full name"
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Profile photo URL
-            </label>
-            <input
+            <FormInput
+              label="Profile photo URL"
               name="photoUrl"
               value={formData.photoUrl}
               onChange={handleChange}
               placeholder="https://example.com/photo.jpg"
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             />
           </div>
 
@@ -260,15 +257,12 @@ function EditProfilePage() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600">
-              About you
-            </label>
-            <textarea
+            <FormTextarea
+              label="About you"
               name="bio"
               value={formData.bio}
               onChange={handleChange}
               rows={5}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
             />
           </div>
 
@@ -419,7 +413,7 @@ function EditProfilePage() {
         </div>
 
         <div className="mt-6 flex items-center justify-between gap-3">
-          {savedMessage ? <p className="text-sm text-emerald-700">{savedMessage}</p> : <span />}
+          {savedMessage ? <StatusCallout tone="success">{savedMessage}</StatusCallout> : <span />}
           <MotionButton type="submit" variant="primary" className="px-5 py-2.5 text-sm">
             Save changes
           </MotionButton>

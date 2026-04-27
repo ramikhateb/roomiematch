@@ -13,7 +13,7 @@ type FormSelectProps = {
 }
 
 const selectBase =
-  'w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-white px-4 py-3 pr-10 text-sm outline-none transition focus:border-cyan-500 focus:ring-2 ring-cyan-200'
+  'w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-white px-4 py-3 pr-10 text-sm outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30'
 
 function FormSelect({
   label,
@@ -39,6 +39,7 @@ function FormSelect({
           name={name}
           value={value}
           onChange={onChange}
+          aria-invalid={Boolean(error)}
           className={`${selectBase} ${
             error ? 'border-red-300 bg-red-50' : ''
           } ${value === '' ? 'text-slate-600' : 'text-slate-800'}`}

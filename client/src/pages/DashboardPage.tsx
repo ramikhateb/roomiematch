@@ -1,43 +1,29 @@
 import { Link } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 
 function DashboardPage() {
-  return (
-    <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-16">
-      {/* Header */}
-      <header className="relative mb-10 sm:mb-14">
-        <div className="absolute -left-4 top-0 h-24 w-24 rounded-full bg-violet-500/15 blur-3xl sm:-left-8" />
-        <div className="absolute -right-8 top-12 h-32 w-32 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="relative">
-          <p className="mb-3 inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
-            Dashboard
-          </p>
-          <h1 className="max-w-2xl text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-[2.5rem] md:leading-[1.15]">
-            Welcome back —{' '}
-            <span className="bg-linear-to-r from-cyan-600 to-violet-600 bg-clip-text text-transparent">
-              almost there
-            </span>
-          </h1>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            Track matches, refine what you are looking for, and keep conversations
-            moving. Built to feel calm, not like another noisy feed.
-          </p>
-        </div>
-      </header>
+  const topMatches = [
+    { name: 'Noa Levi', score: 92, notes: 'Quiet evenings, similar budget, pet-friendly' },
+    { name: 'Daniel Cohen', score: 88, notes: 'Early schedule, tidy habits, no smoking' },
+    { name: 'Maya Ben David', score: 84, notes: 'WFH compatible, social 1-2 nights/week' },
+  ]
 
-      {/* Quick stats */}
-      <section
-        className="mb-8 grid gap-3 sm:mb-10 sm:grid-cols-3"
-        aria-label="Overview"
-      >
+  return (
+    <div className="page-shell max-w-7xl">
+      <PageHeader
+        eyebrow="Dashboard"
+        title="Welcome back,"
+        accent="your search is in motion"
+        subtitle="Track compatibility progress, shortlist apartments, and prep for better roommate introductions."
+      />
+
+      <section className="mb-8 grid gap-3 sm:mb-10 sm:grid-cols-3" aria-label="Overview">
         {[
-          { value: '—', label: 'New suggestions', hint: 'Based on your prefs' },
-          { value: '—', label: 'Saved listings', hint: 'Tap save on a card' },
-          { value: '3/4', label: 'Profile strength', hint: 'Add a photo next' },
+          { value: '12', label: 'Fresh roommate candidates', hint: 'Updated by preferences' },
+          { value: '7', label: 'Saved apartments', hint: 'Ready to compare' },
+          { value: '82%', label: 'Profile completeness', hint: 'Add entry date to improve' },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 backdrop-blur-sm transition hover:border-slate-300"
-          >
+          <div key={stat.label} className="panel-muted px-5 py-4 transition hover:border-slate-300">
             <p className="text-2xl font-bold tabular-nums tracking-tight text-slate-900">
               {stat.value}
             </p>
@@ -47,12 +33,9 @@ function DashboardPage() {
         ))}
       </section>
 
-      {/* Bento grid */}
       <section className="grid gap-4 lg:grid-cols-12 lg:gap-5" aria-label="Actions">
-        {/* Main feature — matches */}
-        <div className="relative lg:col-span-7">
-          <div className="absolute -inset-px rounded-[1.35rem] bg-linear-to-br from-cyan-500/25 via-transparent to-violet-500/20 opacity-60 blur-sm" />
-          <div className="relative flex h-full flex-col rounded-[1.25rem] border border-slate-300 bg-white p-6 shadow-[0_28px_90px_-48px_rgba(34,211,238,0.35)] sm:p-8">
+        <div className="panel relative lg:col-span-7">
+          <div className="relative flex h-full flex-col p-6 sm:p-8">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-cyan-500/20 to-violet-500/15 text-cyan-700">
@@ -76,24 +59,29 @@ function DashboardPage() {
                     Suggested roommates
                   </h2>
                   <p className="text-sm text-slate-600">
-                    Ranked by lifestyle fit, not random swipes.
+                    Explainable scoring by budget, routines, and boundaries.
                   </p>
                 </div>
               </div>
-              <span className="shrink-0 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
-                Live soon
+              <span className="shrink-0 rounded-full border border-cyan-300/50 bg-cyan-100 px-2.5 py-1 text-[11px] font-semibold text-cyan-800">
+                UI preview
               </span>
             </div>
 
-            <div className="mb-6 flex-1 rounded-xl border border-slate-200 bg-slate-50 p-5">
-              <p className="text-sm font-medium text-slate-700">
-                No suggestions yet
-              </p>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-500">
-                Complete your profile preferences and we will surface people who
-                align on schedule, noise, and budget—then you can say hello in one
-                tap.
-              </p>
+            <div className="mb-6 grid gap-3">
+              {topMatches.map((match) => (
+                <article key={match.name} className="panel-muted p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">{match.name}</h3>
+                      <p className="mt-1 text-xs text-slate-600">{match.notes}</p>
+                    </div>
+                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                      {match.score}% fit
+                    </span>
+                  </div>
+                </article>
+              ))}
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -105,18 +93,16 @@ function DashboardPage() {
               </Link>
               <Link
                 to="/apartments"
-                className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-white min-[480px]:flex-none"
+                className="inline-flex min-[480px]:flex-none items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
               >
-                Browse listings
+                Browse apartments
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Side column */}
         <div className="flex flex-col gap-4 lg:col-span-5">
-          {/* Messages */}
-          <div className="rounded-[1.25rem] border border-slate-200 bg-white p-6 transition hover:border-slate-300">
+          <div className="panel p-6 transition hover:border-slate-300">
             <div className="mb-4 flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
                 <svg
@@ -144,12 +130,11 @@ function DashboardPage() {
               replies.
             </p>
             <p className="mt-4 rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-3 text-center text-xs text-slate-500">
-              Inbox connects after your first match
+              Messaging module unlocks after first mutual intro
             </p>
           </div>
 
-          {/* Profile */}
-          <div className="rounded-[1.25rem] border border-slate-200 bg-white p-6 transition hover:border-slate-300">
+          <div className="panel p-6 transition hover:border-slate-300">
             <div className="mb-4 flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-violet-600">
                 <svg
@@ -176,18 +161,14 @@ function DashboardPage() {
               Sleep, noise, guests, pets—small edits here sharpen who we suggest
               next.
             </p>
-            <Link
-              to="/register"
-              className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-            >
+            <Link className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50" to="/register">
               Review signup answers
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Bottom strip */}
-      <aside className="mt-8 flex flex-col items-start justify-between gap-4 rounded-[1.25rem] border border-slate-200 bg-white p-6 sm:flex-row sm:items-center sm:p-7">
+      <aside className="panel mt-8 flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center sm:p-7">
         <div>
           <p className="text-sm font-semibold text-slate-900">Hunting for the flat?</p>
           <p className="mt-1 text-sm text-slate-500">
@@ -198,7 +179,7 @@ function DashboardPage() {
           to="/apartments"
           className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-100"
         >
-          Open listings
+          Open apartments
           <svg
             className="h-4 w-4 text-slate-600"
             fill="none"

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import MotionLink from '../components/motion/MotionLink'
+import { getCurrentUser } from '../services/authService'
 
 const heroContainer = {
   hidden: { opacity: 0 },
@@ -37,9 +38,10 @@ const featureItem = {
 
 function HomePage() {
   const reduceMotion = useReducedMotion()
+  const currentUser = getCurrentUser()
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-20">
+    <div className="page-shell max-w-6xl">
       <section className="grid gap-12 md:grid-cols-2 md:items-center md:gap-16">
         <motion.div variants={heroContainer} initial="hidden" animate="show">
           <motion.p
@@ -68,24 +70,26 @@ function HomePage() {
             moving in feels like a step forward, not a dice roll.
           </motion.p>
 
-          <motion.div variants={heroItem} className="flex flex-wrap items-center gap-3">
-            <MotionLink
-              to="/register"
-              className="inline-flex items-center justify-center rounded-2xl bg-linear-to-r from-cyan-500 to-violet-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_-14px_rgba(8,145,178,0.5)] transition hover:brightness-110"
-            >
-              Create your profile
-            </MotionLink>
+          {!currentUser ? (
+            <motion.div variants={heroItem} className="flex flex-wrap items-center gap-3">
+              <MotionLink
+                to="/register"
+                className="inline-flex items-center justify-center rounded-2xl bg-linear-to-r from-cyan-500 to-violet-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_-14px_rgba(8,145,178,0.5)] transition hover:brightness-110"
+              >
+                Create your profile
+              </MotionLink>
 
-            <MotionLink
-              to="/login"
-              className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50"
-            >
-              I already have an account
-            </MotionLink>
-          </motion.div>
+              <MotionLink
+                to="/login"
+                className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 transition hover:border-slate-300 hover:bg-slate-50"
+              >
+                I already have an account
+              </MotionLink>
+            </motion.div>
+          ) : null}
 
           <motion.p variants={heroItem} className="mt-8 text-xs text-slate-500">
-            No spammy listings—just clearer signals and smarter introductions.
+            No spammy apartments—just clearer signals and smarter introductions.
           </motion.p>
         </motion.div>
 
@@ -175,6 +179,19 @@ function HomePage() {
             </motion.div>
           ))}
         </motion.div>
+      </section>
+
+      <section className="grid gap-4 border-t border-slate-200 pt-12 sm:grid-cols-3">
+        {[
+          { label: 'Active apartment supply', value: '250+' },
+          { label: 'Preference points per profile', value: '12' },
+          { label: 'Median time to intro', value: '< 36h' },
+        ].map((metric) => (
+          <div key={metric.label} className="panel-muted px-5 py-4">
+            <p className="text-2xl font-bold tracking-tight text-slate-900">{metric.value}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.12em] text-slate-500">{metric.label}</p>
+          </div>
+        ))}
       </section>
     </div>
   )
