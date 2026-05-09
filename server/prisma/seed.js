@@ -20,6 +20,179 @@ for (const envPath of envCandidates) {
 
 const prisma = new PrismaClient()
 
+const users = [
+  {
+    email: 'noa.levi@example.com',
+    passwordHash: '$2a$10$QjN0fY8w9xGQXx2X6Qv2xO9sS3F4uQbY1w8tLhA7R1kM4Vn7C8p2W',
+    fullName: 'Noa Levi',
+    budget: 7200,
+    preferences: {
+      city: 'Tel Aviv',
+      minRooms: 2,
+      maxRooms: 3,
+      furnished: true,
+      parking: false,
+      smoking: false,
+      pets: true,
+      lifestyle: 'quiet',
+    },
+    profile: { age: 27, occupation: 'Product Designer', bio: 'Clean, friendly, and early sleeper.' },
+  },
+  {
+    email: 'david.cohen@example.com',
+    passwordHash: '$2a$10$kS4xR8mP2uA7sY1nW3fG4eQ9jL6cH0vT2pR5mN8zX1bD7qK3uJ9aW',
+    fullName: 'David Cohen',
+    budget: 8900,
+    preferences: {
+      city: 'Ramat Gan',
+      minRooms: 2,
+      maxRooms: 4,
+      furnished: false,
+      parking: true,
+      smoking: false,
+      pets: false,
+      lifestyle: 'social',
+    },
+    profile: { age: 30, occupation: 'Software Engineer', bio: 'Into fitness and weekend hikes.' },
+  },
+  {
+    email: 'maya.benari@example.com',
+    passwordHash: '$2a$10$Wm2kT9dF4pL1aS7qH8rJ5vN3xC6bZ0yU2eD9gK4mP7tR1nF8sQ5uA',
+    fullName: 'Maya Ben Ari',
+    budget: 6500,
+    preferences: {
+      city: 'Givatayim',
+      minRooms: 1,
+      maxRooms: 2,
+      furnished: true,
+      parking: false,
+      smoking: false,
+      pets: true,
+      lifestyle: 'quiet',
+    },
+    profile: { age: 25, occupation: 'UX Researcher', bio: 'Works from home 2 days a week.' },
+  },
+  {
+    email: 'itan.shalev@example.com',
+    passwordHash: '$2a$10$Bv6pM1xN9qR3tY7kL2cD5sF8hJ4uW0eA6zP1mG7nQ9rT2vK5xC8dE',
+    fullName: 'Itan Shalev',
+    budget: 5600,
+    preferences: {
+      city: 'Bat Yam',
+      minRooms: 1,
+      maxRooms: 3,
+      furnished: false,
+      parking: true,
+      smoking: true,
+      pets: false,
+      lifestyle: 'flexible',
+    },
+    profile: { age: 29, occupation: 'Sales Manager', bio: 'Easy going and night owl.' },
+  },
+  {
+    email: 'yael.friedman@example.com',
+    passwordHash: '$2a$10$Hk8tV3mR1pQ6xN9dF2sJ5aL7uC4bW0yE8gP3nK6rT1vM9qD2xF5zA',
+    fullName: 'Yael Friedman',
+    budget: 10200,
+    preferences: {
+      city: 'Herzliya',
+      minRooms: 3,
+      maxRooms: 4,
+      furnished: true,
+      parking: true,
+      smoking: false,
+      pets: true,
+      lifestyle: 'quiet',
+    },
+    profile: { age: 33, occupation: 'Marketing Lead', bio: 'Loves cooking and hosting dinner.' },
+  },
+  {
+    email: 'omer.katz@example.com',
+    passwordHash: '$2a$10$Np4dJ7sF1qR9xM2kT6vB3aL8hC5uW0yE4gP7nK1rT9mQ2dF6xZ3uA',
+    fullName: 'Omer Katz',
+    budget: 6000,
+    preferences: {
+      city: 'Holon',
+      minRooms: 2,
+      maxRooms: 3,
+      furnished: false,
+      parking: false,
+      smoking: false,
+      pets: false,
+      lifestyle: 'social',
+    },
+    profile: { age: 28, occupation: 'Data Analyst', bio: 'Tidy and likes shared movie nights.' },
+  },
+  {
+    email: 'shira.avidan@example.com',
+    passwordHash: '$2a$10$Qx3mL8tF1pR6dN9kV2sJ5aH7uC4bW0yE8gP3nK6rT1vM9qD2xF5zB',
+    fullName: 'Shira Avidan',
+    budget: 7400,
+    preferences: {
+      city: 'Jaffa',
+      minRooms: 2,
+      maxRooms: 3,
+      furnished: true,
+      parking: false,
+      smoking: false,
+      pets: true,
+      lifestyle: 'flexible',
+    },
+    profile: { age: 26, occupation: 'Photographer', bio: 'Creative, respectful, and organized.' },
+  },
+  {
+    email: 'gal.peretz@example.com',
+    passwordHash: '$2a$10$Tn7kV2mR9pQ4xD1fL6sJ3aH8uC5bW0yE2gP9nK4rT7vM1qF6xZ3uB',
+    fullName: 'Gal Peretz',
+    budget: 8200,
+    preferences: {
+      city: 'Tel Aviv',
+      minRooms: 2,
+      maxRooms: 3,
+      furnished: false,
+      parking: true,
+      smoking: false,
+      pets: false,
+      lifestyle: 'quiet',
+    },
+    profile: { age: 31, occupation: 'Architect', bio: 'Early riser and gym routine.' },
+  },
+  {
+    email: 'liat.mizrahi@example.com',
+    passwordHash: '$2a$10$M2qR7tF1pN9xD4kV6sJ3aH8uC5bW0yE2gP9nK4rT7vM1qF6xZ3uC',
+    fullName: 'Liat Mizrahi',
+    budget: 6900,
+    preferences: {
+      city: 'Ramat Aviv',
+      minRooms: 1,
+      maxRooms: 2,
+      furnished: true,
+      parking: false,
+      smoking: false,
+      pets: true,
+      lifestyle: 'quiet',
+    },
+    profile: { age: 24, occupation: 'Student', bio: 'Studying psychology, calm and neat.' },
+  },
+  {
+    email: 'ronen.barak@example.com',
+    passwordHash: '$2a$10$D4kV7mR1pQ9xT2fL6sJ3aH8uC5bW0yE2gP9nK4rT7vM1qF6xZ3uD',
+    fullName: 'Ronen Barak',
+    budget: 9500,
+    preferences: {
+      city: 'Tel Aviv',
+      minRooms: 3,
+      maxRooms: 4,
+      furnished: false,
+      parking: true,
+      smoking: false,
+      pets: true,
+      lifestyle: 'social',
+    },
+    profile: { age: 34, occupation: 'Account Executive', bio: 'Outgoing and loves city life.' },
+  },
+]
+
 const apartments = [
   {
     title: 'Renovated 2BR Near Dizengoff Center',
@@ -214,8 +387,11 @@ const apartments = [
 ]
 
 async function main() {
+  await prisma.user.deleteMany()
   await prisma.apartment.deleteMany()
+  await prisma.user.createMany({ data: users })
   await prisma.apartment.createMany({ data: apartments })
+  console.log(`Seeded ${users.length} users.`)
   console.log(`Seeded ${apartments.length} apartments.`)
 }
 
