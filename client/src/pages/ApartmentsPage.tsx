@@ -23,6 +23,7 @@ const initialFilters: ApartmentFiltersType = {
 function ApartmentsPage() {
   const [apartments, setApartments] = useState<Apartment[]>([])
   const [filters, setFilters] = useState<ApartmentFiltersType>(initialFilters)
+  const [activeFilters, setActiveFilters] = useState<ApartmentFiltersType>(initialFilters)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedApartmentId, setSelectedApartmentId] = useState<string | null>(null)
@@ -33,7 +34,7 @@ function ApartmentsPage() {
       try {
         setIsLoading(true)
         setError('')
-        setApartments(await getApartments(filters))
+        setApartments(await getApartments(activeFilters))
       } catch (err) {
         console.error(err)
         setApartments([])
@@ -44,7 +45,7 @@ function ApartmentsPage() {
     }
 
     loadApartments()
-  }, [filters])
+  }, [activeFilters])
 
   useEffect(() => {
     setSelectedApartmentId((prev) =>
@@ -84,6 +85,11 @@ function ApartmentsPage() {
 
   function handleReset() {
     setFilters(initialFilters)
+    setActiveFilters(initialFilters)
+  }
+
+  function handleSearch() {
+    setActiveFilters({ ...filters })
   }
 
   function toggleSelectApartment(id: string | null) {
@@ -113,40 +119,8 @@ function ApartmentsPage() {
         filters={filters}
         onChange={handleChange}
         onReset={handleReset}
+        onSearch={handleSearch}
       />
-
-      <section className="mt-6 grid gap-4 lg:grid-cols-2">
-        <article className="panel-muted p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-900">
-              Find roommates by preferences
-            </h2>
-            <span className="rounded-full border border-cyan-300/50 bg-cyan-100 px-2 py-0.5 text-[11px] font-semibold text-cyan-800">
-              UI preview
-            </span>
-          </div>
-          <p className="text-sm text-slate-600">
-            This panel will connect to roommate filters (schedule, cleanliness,
-            smoking, pets, budget overlap) in the next backend phase.
-          </p>
-        </article>
-        <article className="panel-muted p-5">
-          <h2 className="mb-3 text-sm font-semibold text-slate-900">
-            Top roommate matches
-          </h2>
-          <div className="space-y-2">
-            {[
-              { name: 'Noa Levi', fit: '92% fit' },
-              { name: 'Lior Azulay', fit: '88% fit' },
-            ].map((candidate) => (
-              <div key={candidate.name} className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2">
-                <p className="text-sm font-medium text-slate-800">{candidate.name}</p>
-                <span className="text-xs font-semibold text-emerald-700">{candidate.fit}</span>
-              </div>
-            ))}
-          </div>
-        </article>
-      </section>
 
       <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-6">
         <p className="text-sm text-slate-500">
@@ -188,12 +162,12 @@ function ApartmentsPage() {
         ) : (
           <motion.div
             layout
-            className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-start"
+            className="mt-8 grid gap-5 lg:h-[calc(100vh-220px)] lg:grid-cols-2 lg:items-start lg:overflow-hidden"
             transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } }}
           >
             <motion.div
               layout
-              className="order-2 lg:order-2 lg:sticky lg:top-24"
+              className="order-2 lg:order-2 lg:h-full lg:self-start lg:sticky lg:top-24"
               transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } }}
             >
               <ApartmentMap
@@ -201,25 +175,28 @@ function ApartmentsPage() {
                 selectedApartmentId={selectedApartmentId}
                 highlightedApartmentId={hoveredApartmentId}
                 onSelectApartment={toggleSelectApartment}
+                className="lg:h-full"
               />
             </motion.div>
 
             <motion.div
               layout
-              className="order-1 grid gap-5 md:grid-cols-2 lg:order-1"
+              className="order-1 lg:order-1 lg:h-full lg:overflow-y-auto lg:pr-1"
               transition={{ layout: { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const } }}
             >
-              <AnimatePresence mode="popLayout">
-                {apartments.map((apartment) => (
-                  <ApartmentCard
-                    key={apartment.id}
-                    apartment={apartment}
-                    isHighlighted={selectedApartmentId === apartment.id}
-                    onHighlight={() => toggleSelectApartment(apartment.id)}
-                    onHoverChange={setHoveredApartmentId}
-                  />
-                ))}
-              </AnimatePresence>
+              <div className="grid gap-5">
+                <AnimatePresence mode="popLayout">
+                  {apartments.map((apartment) => (
+                    <ApartmentCard
+                      key={apartment.id}
+                      apartment={apartment}
+                      isHighlighted={selectedApartmentId === apartment.id}
+                      onHighlight={() => toggleSelectApartment(apartment.id)}
+                      onHoverChange={setHoveredApartmentId}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
             </motion.div>
           </motion.div>
         )}

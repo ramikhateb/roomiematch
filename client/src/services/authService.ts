@@ -81,6 +81,13 @@ function readUsers(): StoredUser[] {
   }
 }
 
+export function listRegisteredUsers(): AuthUser[] {
+  return readUsers().map((user) => {
+    const { password: _, ...safeUser } = user
+    return safeUser
+  })
+}
+
 function writeUsers(users: StoredUser[]) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users))
 }

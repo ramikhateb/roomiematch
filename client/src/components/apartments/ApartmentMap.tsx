@@ -17,6 +17,7 @@ type ApartmentMapProps = {
   selectedApartmentId: string | null
   highlightedApartmentId?: string | null
   onSelectApartment: (id: string | null) => void
+  className?: string
 }
 
 const TLV_CENTER: [number, number] = [32.0853, 34.7818]
@@ -78,6 +79,7 @@ function ApartmentMap({
   selectedApartmentId,
   highlightedApartmentId = null,
   onSelectApartment,
+  className = '',
 }: ApartmentMapProps) {
   const mappableApartments = useMemo(
     () =>
@@ -107,7 +109,9 @@ function ApartmentMap({
   }
 
   return (
-    <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6">
+    <section
+      className={`rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 ${className}`.trim()}
+    >
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">Map view</h2>
@@ -124,7 +128,7 @@ function ApartmentMap({
         <MapContainer
           center={TLV_CENTER}
           zoom={DEFAULT_ZOOM}
-          className="h-[460px] w-full sm:h-[560px] lg:h-[680px]"
+          className="h-[460px] w-full sm:h-[560px] lg:h-full"
           scrollWheelZoom
         >
           <TileLayer

@@ -8,6 +8,7 @@ type ApartmentFiltersProps = {
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void
   onReset: () => void
+  onSearch: () => void
 }
 
 const fieldClass =
@@ -17,6 +18,7 @@ function ApartmentFilters({
   filters,
   onChange,
   onReset,
+  onSearch,
 }: ApartmentFiltersProps) {
   const reduce = useReducedMotion()
 
@@ -45,6 +47,14 @@ function ApartmentFilters({
           className="shrink-0 px-4 py-2.5 text-sm font-medium"
         >
           Clear all
+        </MotionButton>
+        <MotionButton
+          type="button"
+          variant="primary"
+          onClick={onSearch}
+          className="shrink-0 px-5 py-2.5 text-sm font-medium"
+        >
+          Search
         </MotionButton>
       </div>
 
