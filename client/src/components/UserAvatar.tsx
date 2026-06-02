@@ -45,7 +45,7 @@ function UserAvatar({
 
   return (
     <div
-      className={`flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-600 to-violet-600 font-semibold text-white ring-white ${sizeClass} ${className}`.trim()}
+      className={`flex shrink-0 items-center justify-center rounded-full bg-linear-to-br from-cyan-600 to-violet-600 font-semibold text-white ring-white ${sizeClass} ${className}`.trim()}
       aria-hidden
     >
       {getInitials(fullName)}
