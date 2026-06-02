@@ -110,7 +110,7 @@ function ApartmentMap({
 
   return (
     <section
-      className={`rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 ${className}`.trim()}
+      className={`flex flex-col rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-6 ${className}`.trim()}
     >
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
@@ -124,11 +124,11 @@ function ApartmentMap({
         </span>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
+      <div className="h-[460px] min-h-0 w-full overflow-hidden rounded-2xl border border-slate-200 sm:h-[560px] lg:h-auto lg:flex-1">
         <MapContainer
           center={TLV_CENTER}
           zoom={DEFAULT_ZOOM}
-          className="h-[460px] w-full sm:h-[560px] lg:h-full"
+          className="h-full w-full"
           scrollWheelZoom
         >
           <TileLayer

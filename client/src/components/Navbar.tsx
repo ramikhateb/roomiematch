@@ -1,14 +1,12 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Star } from 'lucide-react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { getCurrentUser } from '../services/authService'
 
 const MotionJoinLink = motion(Link)
 
 function Navbar() {
   const reduceMotion = useReducedMotion()
-  const location = useLocation()
-  const isHome = location.pathname === '/'
   const currentUser = getCurrentUser()
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
@@ -25,14 +23,12 @@ function Navbar() {
           to="/"
           className="inline-flex items-center gap-2 text-lg font-bold tracking-tight text-slate-900 sm:text-xl"
         >
-          {isHome ? (
-            <Star
-              className="h-5 w-5 shrink-0 text-amber-500 sm:h-5 sm:w-5"
-              fill="currentColor"
-              strokeWidth={1.5}
-              aria-hidden
-            />
-          ) : null}
+          <Star
+            className="h-5 w-5 shrink-0 text-amber-500 sm:h-5 sm:w-5"
+            fill="currentColor"
+            strokeWidth={1.5}
+            aria-hidden
+          />
           <span className="bg-linear-to-r from-cyan-600 via-slate-900 to-violet-600 bg-clip-text text-transparent">
             RoomieMatch
           </span>

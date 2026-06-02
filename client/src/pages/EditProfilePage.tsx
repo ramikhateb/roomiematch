@@ -5,6 +5,7 @@ import FormTextarea from '../components/FormTextarea'
 import PageHeader from '../components/PageHeader'
 import StatusCallout from '../components/StatusCallout'
 import MotionButton from '../components/motion/MotionButton'
+import ProfilePhotoPicker from '../components/ProfilePhotoPicker'
 import { getCurrentUser, updateCurrentUserProfile } from '../services/authService'
 
 type ProfileFormData = {
@@ -120,6 +121,11 @@ function EditProfilePage() {
     }))
   }
 
+  function handlePhotoChange(photoUrl: string) {
+    setSavedMessage('')
+    setFormData((prev) => ({ ...prev, photoUrl }))
+  }
+
   function handleSave(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const user = getCurrentUser()
@@ -168,10 +174,12 @@ function EditProfilePage() {
         title="Edit your profile"
         subtitle="Fine-tune your lifestyle and apartment preferences to improve match quality."
       />
-      <form
-        onSubmit={handleSave}
-        className="panel p-6 sm:p-8"
-      >
+      <form onSubmit={handleSave} className="auth-shell">
+        <div className="border-b border-slate-100 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 px-6 py-4 sm:px-8">
+          <h2 className="text-lg font-bold text-white">Profile details</h2>
+          <p className="mt-0.5 text-xs text-slate-300">Photos, lifestyle, and apartment preferences</p>
+        </div>
+        <div className="p-6 sm:p-8">
         <div className="mb-6 flex items-center justify-end">
           <Link
             to="/profile"
@@ -193,12 +201,10 @@ function EditProfilePage() {
           </div>
 
           <div className="sm:col-span-2">
-            <FormInput
-              label="Profile photo URL"
-              name="photoUrl"
-              value={formData.photoUrl}
-              onChange={handleChange}
-              placeholder="https://example.com/photo.jpg"
+            <ProfilePhotoPicker
+              fullName={formData.fullName || 'Roomie User'}
+              photoUrl={formData.photoUrl}
+              onPhotoChange={handlePhotoChange}
             />
           </div>
 
@@ -417,6 +423,7 @@ function EditProfilePage() {
           <MotionButton type="submit" variant="primary" className="px-5 py-2.5 text-sm">
             Save changes
           </MotionButton>
+        </div>
         </div>
       </form>
     </div>

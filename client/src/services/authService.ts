@@ -92,6 +92,17 @@ function writeUsers(users: StoredUser[]) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users))
 }
 
+function apartmentsMatch(a: InterestedApartment, b: InterestedApartment) {
+  if (String(a.id) === String(b.id)) return true
+  return a.title === b.title && a.city === b.city && a.price === b.price
+}
+
+export function isApartmentInterested(apartment: InterestedApartment): boolean {
+  const user = getCurrentUser()
+  if (!user) return false
+  return user.profile.interestedApartments.some((item) => apartmentsMatch(item, apartment))
+}
+
 function setSession(userId: string) {
   localStorage.setItem(SESSION_KEY, userId)
 }
@@ -201,13 +212,20 @@ export function toggleInterestedApartment(apartment: InterestedApartment): {
   }
 
   const profile = users[userIndex].profile
-  const alreadySaved = profile.interestedApartments.some(
-    (item) => item.id === apartment.id
+  const existingIndex = profile.interestedApartments.findIndex((item) =>
+    apartmentsMatch(item, apartment)
   )
+  const alreadySaved = existingIndex !== -1
 
   const interestedApartments = alreadySaved
-    ? profile.interestedApartments.filter((item) => item.id !== apartment.id)
-    : [apartment, ...profile.interestedApartments]
+    ? profile.interestedApartments.filter((_, index) => index !== existingIndex)
+    : [
+        {
+          ...apartment,
+          id: String(apartment.id),
+        },
+        ...profile.interestedApartments,
+      ]
 
   users[userIndex] = {
     ...users[userIndex],

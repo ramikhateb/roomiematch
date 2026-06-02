@@ -30,18 +30,21 @@ function LoginPage() {
 
   return (
     <div className="page-shell max-w-md">
-      <div className="relative">
-        <div className="absolute -inset-1 rounded-[1.75rem] bg-linear-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-xl" />
-        <div className="panel relative p-8 sm:p-9">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      <div className="auth-shell">
+        <div className="border-b border-slate-100 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 px-6 py-5 sm:px-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-200">
+            Account
+          </p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Welcome back
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Sign in to pick up where you left off—matches, messages, and saved
-            apartments stay in sync.
+        </div>
+        <div className="p-6 sm:p-8">
+          <p className="text-sm leading-relaxed text-slate-600">
+            Sign in to access your dashboard, roommate search, and saved apartments.
           </p>
 
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             <FormInput
               label="Email"
               name="login-email"

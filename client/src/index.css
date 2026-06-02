@@ -57,6 +57,39 @@ body {
   background: var(--color-surface-muted);
 }
 
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1.25rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(148, 163, 184, 0.45) 20%,
+    rgba(148, 163, 184, 0.45) 80%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.section-divider:first-child::before {
+  display: none;
+}
+
+.auth-shell {
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card-strong);
+}
+
 .status-callout {
   border-radius: 0.95rem;
   border: 1px solid;

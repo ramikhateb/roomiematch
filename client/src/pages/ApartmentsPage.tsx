@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { isApartmentInterested } from '../services/authService'
 import { AnimatePresence, motion } from 'framer-motion'
 import ApartmentCard from '../components/apartments/ApartmentCard'
 import ApartmentFilters from '../components/apartments/ApartmentFilters'
@@ -21,6 +23,8 @@ const initialFilters: ApartmentFiltersType = {
 }
 
 function ApartmentsPage() {
+  const location = useLocation()
+  const [savedRevision, setSavedRevision] = useState(0)
   const [apartments, setApartments] = useState<Apartment[]>([])
   const [filters, setFilters] = useState<ApartmentFiltersType>(initialFilters)
   const [activeFilters, setActiveFilters] = useState<ApartmentFiltersType>(initialFilters)
@@ -28,6 +32,10 @@ function ApartmentsPage() {
   const [error, setError] = useState('')
   const [selectedApartmentId, setSelectedApartmentId] = useState<string | null>(null)
   const [hoveredApartmentId, setHoveredApartmentId] = useState<string | null>(null)
+
+  useEffect(() => {
+    setSavedRevision((value) => value + 1)
+  }, [location.pathname])
 
   useEffect(() => {
     async function loadApartments() {
@@ -101,33 +109,46 @@ function ApartmentsPage() {
   }
 
   return (
-    <div className="page-shell max-w-7xl">
+    <div className="page-shell max-w-7xl pb-10">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
       >
         <PageHeader
+          className="mb-6"
           eyebrow="Apartments"
           title="Find a place that works for"
           accent="both of you"
-          subtitle="Narrow by city, budget, and must-haves, then shortlist apartments you can tour together without group-chat chaos."
+          subtitle="Filter listings, explore the map, and save favorites to compare with your roommate."
         />
       </motion.div>
 
-      <ApartmentFilters
-        filters={filters}
-        onChange={handleChange}
-        onReset={handleReset}
-        onSearch={handleSearch}
-      />
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+        <div className="border-b border-slate-100 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 px-4 py-3 sm:px-5">
+          <p className="text-xs font-bold text-white">Listing filters</p>
+          <p className="mt-0.5 text-[11px] text-slate-300">Set criteria, then press Search</p>
+        </div>
+        <div className="p-4 sm:p-5">
+          <ApartmentFilters
+            embedded
+            filters={filters}
+            onChange={handleChange}
+            onReset={handleReset}
+            onSearch={handleSearch}
+          />
+        </div>
+      </div>
 
-      <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-6">
-        <p className="text-sm text-slate-500">
+      <div className="section-divider mt-5 flex items-center justify-between rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-sm sm:px-5">
+        <p className="text-sm font-medium text-slate-700">
           {isLoading
             ? 'Loading apartments…'
-            : `${apartments.length} ${apartments.length === 1 ? 'apartment' : 'apartments'} match`}
+            : `${apartments.length} ${apartments.length === 1 ? 'listing' : 'listings'}`}
         </p>
+        <span className="rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-semibold text-cyan-800">
+          Map + cards
+        </span>
       </div>
 
       {error ? (
@@ -186,15 +207,28 @@ function ApartmentsPage() {
             >
               <div className="grid gap-5">
                 <AnimatePresence mode="popLayout">
-                  {apartments.map((apartment) => (
-                    <ApartmentCard
-                      key={apartment.id}
-                      apartment={apartment}
-                      isHighlighted={selectedApartmentId === apartment.id}
-                      onHighlight={() => toggleSelectApartment(apartment.id)}
-                      onHoverChange={setHoveredApartmentId}
-                    />
-                  ))}
+                  {apartments.map((apartment) => {
+                    void savedRevision
+                    const interested = isApartmentInterested({
+                      id: apartment.id,
+                      title: apartment.title,
+                      city: apartment.city,
+                      price: apartment.price,
+                      imageUrl: apartment.imageUrl,
+                    })
+
+                    return (
+                      <ApartmentCard
+                        key={apartment.id}
+                        apartment={apartment}
+                        isSaved={interested}
+                        isHighlighted={selectedApartmentId === apartment.id}
+                        onHighlight={() => toggleSelectApartment(apartment.id)}
+                        onHoverChange={setHoveredApartmentId}
+                        onSavedChange={() => setSavedRevision((value) => value + 1)}
+                      />
+                    )
+                  })}
                 </AnimatePresence>
               </div>
             </motion.div>

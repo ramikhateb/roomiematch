@@ -118,15 +118,57 @@ function matchesFilters(candidate: AuthUser, filters: RoommateSearchFilters) {
   return true
 }
 
+export function hasActiveSearchFilters(filters: RoommateSearchFilters) {
+  return (
+    filters.query.trim() !== '' ||
+    filters.area.trim() !== '' ||
+    filters.maxBudget.trim() !== '' ||
+    filters.sleepSchedule !== '' ||
+    filters.cleanliness !== '' ||
+    filters.smoking !== '' ||
+    filters.pets !== '' ||
+    filters.housingSituation !== ''
+  )
+}
+
+function shuffleWithSeed<T>(items: T[], seed: number) {
+  const copy = [...items]
+  let state = seed
+
+  function random() {
+    state = Math.sin(state) * 10000
+    return state - Math.floor(state)
+  }
+
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1))
+    ;[copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]]
+  }
+
+  return copy
+}
+
+export function scoreAllRoommates(currentUser: AuthUser, candidates: AuthUser[]): RoommateMatch[] {
+  return candidates
+    .filter((candidate) => candidate.id !== currentUser.id)
+    .map((candidate) => getCompatibility(currentUser, candidate))
+}
+
+export function discoverRoommates(
+  currentUser: AuthUser,
+  candidates: AuthUser[],
+  seed: number
+): RoommateMatch[] {
+  return shuffleWithSeed(scoreAllRoommates(currentUser, candidates), seed)
+}
+
 export function findRoommates(
   currentUser: AuthUser,
   candidates: AuthUser[],
   filters: RoommateSearchFilters
 ): RoommateMatch[] {
-  return candidates
-    .filter((candidate) => candidate.id !== currentUser.id)
-    .filter((candidate) => matchesFilters(candidate, filters))
-    .map((candidate) => getCompatibility(currentUser, candidate))
+  return scoreAllRoommates(currentUser, candidates)
+    .filter((match) => matchesFilters(match.user, filters))
     .sort((a, b) => b.score - a.score)
 }
 

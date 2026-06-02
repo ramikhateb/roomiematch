@@ -9,11 +9,15 @@ type FormSelectProps = {
   options: readonly Option[]
   error?: string
   placeholder?: string
+  dense?: boolean
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
 const selectBase =
   'w-full cursor-pointer appearance-none rounded-xl border border-slate-300 bg-white px-4 py-3 pr-10 text-sm outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30'
+
+const selectDense =
+  'w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 pr-9 text-sm outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/25'
 
 function FormSelect({
   label,
@@ -22,13 +26,18 @@ function FormSelect({
   options,
   error,
   placeholder = 'Choose one',
+  dense = false,
   onChange,
 }: FormSelectProps) {
   return (
     <div>
       <label
         htmlFor={name}
-        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600"
+        className={
+          dense
+            ? 'mb-1 block text-[11px] font-semibold text-slate-600'
+            : 'mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600'
+        }
       >
         {label}
       </label>
@@ -40,9 +49,9 @@ function FormSelect({
           value={value}
           onChange={onChange}
           aria-invalid={Boolean(error)}
-          className={`${selectBase} ${
+          className={`${dense ? selectDense : selectBase} ${
             error ? 'border-red-300 bg-red-50' : ''
-          } ${value === '' ? 'text-slate-600' : 'text-slate-800'}`}
+          } ${value === '' ? 'text-slate-500' : 'text-slate-800'}`}
         >
           <option value="" disabled>
             ─ {placeholder} ─
@@ -54,12 +63,12 @@ function FormSelect({
           ))}
         </select>
         <span
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-600"
+          className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-slate-500 ${dense ? 'right-2.5' : 'right-3'}`}
           aria-hidden
         >
           <svg
-            width="16"
-            height="16"
+            width={dense ? 14 : 16}
+            height={dense ? 14 : 16}
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

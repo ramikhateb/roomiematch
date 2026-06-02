@@ -1,14 +1,15 @@
 import type { Apartment } from '../../types/apartment'
-import { getCurrentUser, toggleInterestedApartment } from '../../services/authService'
+import { toggleInterestedApartment } from '../../services/authService'
 import { motion, useReducedMotion } from 'framer-motion'
-import { useMemo, useState } from 'react'
 import { BedDouble, Building2, Car, Heart, Sofa } from 'lucide-react'
 
 type ApartmentCardProps = {
   apartment: Apartment
+  isSaved?: boolean
   isHighlighted?: boolean
   onHighlight?: () => void
   onHoverChange?: (id: string | null) => void
+  onSavedChange?: () => void
 }
 
 const cardShadow = '0 12px 24px -20px rgba(15, 23, 42, 0.25)'
@@ -32,20 +33,17 @@ function toConditionLabel(quality: string): string {
 
 function ApartmentCard({
   apartment,
+  isSaved = false,
   isHighlighted = false,
   onHighlight,
   onHoverChange,
+  onSavedChange,
 }: ApartmentCardProps) {
   const reduce = useReducedMotion()
   const safeId = String(apartment.id ?? '')
   const safePrice = Number(apartment.price) || 0
   const safeRooms = Number(apartment.rooms) || 0
   const conditionLabel = toConditionLabel(String(apartment.quality || ''))
-  const currentUser = useMemo(() => getCurrentUser(), [])
-  const initiallySaved =
-    currentUser?.profile.interestedApartments?.some((item) => item.id === safeId) ||
-    false
-  const [isSaved, setIsSaved] = useState(initiallySaved)
 
   const imageSrc =
     apartment.imageUrl ||
@@ -62,14 +60,14 @@ function ApartmentCard({
 
   function handleToggleSave() {
     try {
-      const result = toggleInterestedApartment({
+      toggleInterestedApartment({
         id: safeId,
         title: apartment.title,
         city: apartment.city,
         price: safePrice,
         imageUrl: apartment.imageUrl,
       })
-      setIsSaved(result.saved)
+      onSavedChange?.()
     } catch {
       alert('Please sign in to save apartments.')
     }

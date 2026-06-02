@@ -4,6 +4,7 @@ import MotionButton from '../motion/MotionButton'
 
 type ApartmentFiltersProps = {
   filters: ApartmentFiltersType
+  embedded?: boolean
   onChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void
@@ -14,13 +15,18 @@ type ApartmentFiltersProps = {
 const fieldClass =
   'rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none ring-cyan-400/25 placeholder:text-zinc-600 focus:border-cyan-400/35 focus:ring-2'
 
+const fieldClassEmbedded =
+  'rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/25'
+
 function ApartmentFilters({
   filters,
+  embedded = false,
   onChange,
   onReset,
   onSearch,
 }: ApartmentFiltersProps) {
   const reduce = useReducedMotion()
+  const inputClass = embedded ? fieldClassEmbedded : fieldClass
 
   return (
     <motion.div
@@ -28,31 +34,43 @@ function ApartmentFilters({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
-      className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:p-6"
+      className={
+        embedded
+          ? ''
+          : 'rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.75)] backdrop-blur-sm sm:p-6'
+      }
     >
-      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
-            Refine your search
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Stack filters until the map matches what you actually need.
-          </p>
-        </div>
+      <div
+        className={
+          embedded
+            ? 'mb-3 flex flex-wrap items-center justify-end gap-2'
+            : 'mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'
+        }
+      >
+        {!embedded ? (
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
+              Refine your search
+            </h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Stack filters until the map matches what you actually need.
+            </p>
+          </div>
+        ) : null}
 
         <MotionButton
           type="button"
           variant="outline"
           onClick={onReset}
-          className="shrink-0 px-4 py-2.5 text-sm font-medium"
+          className="shrink-0 px-4 py-2 text-sm font-medium"
         >
-          Clear all
+          Reset
         </MotionButton>
         <MotionButton
           type="button"
           variant="primary"
           onClick={onSearch}
-          className="shrink-0 px-5 py-2.5 text-sm font-medium"
+          className="shrink-0 px-4 py-2 text-sm font-medium"
         >
           Search
         </MotionButton>
@@ -70,7 +88,7 @@ function ApartmentFilters({
           placeholder="Keyword or area"
           value={filters.search}
           onChange={onChange}
-          className={fieldClass}
+          className={inputClass}
         />
 
         <motion.input
@@ -80,7 +98,7 @@ function ApartmentFilters({
           placeholder="City"
           value={filters.city}
           onChange={onChange}
-          className={fieldClass}
+          className={inputClass}
         />
 
         <motion.input
@@ -90,7 +108,7 @@ function ApartmentFilters({
           placeholder="Min ₪ / month"
           value={filters.minPrice}
           onChange={onChange}
-          className={fieldClass}
+          className={inputClass}
         />
 
         <motion.input
@@ -100,7 +118,7 @@ function ApartmentFilters({
           placeholder="Max ₪ / month"
           value={filters.maxPrice}
           onChange={onChange}
-          className={fieldClass}
+          className={inputClass}
         />
 
         <motion.input
@@ -110,7 +128,7 @@ function ApartmentFilters({
           placeholder="Rooms"
           value={filters.rooms}
           onChange={onChange}
-          className={fieldClass}
+          className={inputClass}
         />
 
         <motion.select
@@ -118,7 +136,7 @@ function ApartmentFilters({
           name="quality"
           value={filters.quality}
           onChange={onChange}
-          className={fieldClass}
+          className={inputClass}
         >
           <option value="">Any condition</option>
           <option value="old">Old</option>
@@ -129,7 +147,11 @@ function ApartmentFilters({
 
         <motion.label
           layout={!reduce}
-          className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300"
+          className={`flex cursor-pointer items-center gap-3 text-sm text-slate-700 transition ${
+            embedded
+              ? 'rounded-lg border border-slate-200 bg-slate-50 px-3 py-2'
+              : 'rounded-xl border border-slate-300 bg-white px-4 py-3 hover:border-slate-300'
+          }`}
           whileHover={reduce ? undefined : { scale: 1.01 }}
           whileTap={reduce ? undefined : { scale: 0.995 }}
         >
@@ -145,7 +167,11 @@ function ApartmentFilters({
 
         <motion.label
           layout={!reduce}
-          className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300"
+          className={`flex cursor-pointer items-center gap-3 text-sm text-slate-700 transition ${
+            embedded
+              ? 'rounded-lg border border-slate-200 bg-slate-50 px-3 py-2'
+              : 'rounded-xl border border-slate-300 bg-white px-4 py-3 hover:border-slate-300'
+          }`}
           whileHover={reduce ? undefined : { scale: 1.01 }}
           whileTap={reduce ? undefined : { scale: 0.995 }}
         >

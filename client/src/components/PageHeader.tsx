@@ -3,11 +3,12 @@ type PageHeaderProps = {
   title: string
   subtitle: string
   accent?: string
+  className?: string
 }
 
-function PageHeader({ eyebrow, title, subtitle, accent }: PageHeaderProps) {
+function PageHeader({ eyebrow, title, subtitle, accent, className = '' }: PageHeaderProps) {
   return (
-    <header className="mb-8 max-w-3xl">
+    <header className={`mb-8 max-w-3xl ${className}`.trim()}>
       <p className="mb-3 inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600">
         {eyebrow}
       </p>

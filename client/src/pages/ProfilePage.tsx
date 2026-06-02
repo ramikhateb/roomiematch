@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import MotionButton from '../components/motion/MotionButton'
 import PageHeader from '../components/PageHeader'
+import UserAvatar from '../components/UserAvatar'
 import { getCurrentUser, signOutUser } from '../services/authService'
 import type { AuthUser } from '../types/auth'
 
@@ -35,9 +36,6 @@ function ProfilePage() {
   if (!isAuthenticated) return <Navigate to="/login" replace />
   if (!user) return null
 
-  const previewPhoto =
-    user.profile.photoUrl.trim() ||
-    'https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&w=320&q=80'
   const postCount = user.profile.interestedApartments.length
   const friendCount = user.profile.friendsCount || 0
   const followingCount = user.profile.followingCount || 0
@@ -103,12 +101,13 @@ function ProfilePage() {
           Sign out
         </MotionButton>
       </div>
-      <div className="panel p-6 sm:p-8">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-          <img
-            src={previewPhoto}
-            alt="Profile"
-            className="h-28 w-28 rounded-full border border-slate-200 object-cover shadow-sm sm:h-36 sm:w-36"
+          <UserAvatar
+            fullName={user.fullName}
+            photoUrl={user.profile.photoUrl}
+            size="xl"
+            className="shadow-sm ring-slate-200"
           />
 
           <div className="flex-1">
@@ -163,7 +162,7 @@ function ProfilePage() {
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
-        <section className="panel p-5">
+        <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">
             Lifestyle
           </h2>
@@ -186,7 +185,7 @@ function ProfilePage() {
           </div>
         </section>
 
-        <section className="panel p-5 lg:col-span-2">
+        <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm lg:col-span-2">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">
             Apartment preferences
           </h2>
@@ -223,7 +222,7 @@ function ProfilePage() {
         </section>
       </div>
 
-      <div className="panel mt-8 p-4 sm:p-6">
+      <div className="section-divider mt-8 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-6">
         <div className="mb-4 border-b border-slate-200 pb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
           Contact
         </div>
@@ -267,7 +266,7 @@ function ProfilePage() {
         </div>
       </div>
 
-      <div className="panel mt-8 p-4 sm:p-6">
+      <div className="section-divider mt-8 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-6">
         <div className="mb-4 border-b border-slate-200 pb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
           Interested apartments
         </div>

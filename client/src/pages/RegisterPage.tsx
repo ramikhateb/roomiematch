@@ -144,19 +144,22 @@ function RegisterPage() {
   )
 
   return (
-    <div className="page-shell max-w-4xl">
-      <div className="relative">
-        <div className="absolute -inset-1 rounded-[1.75rem] bg-linear-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-xl" />
-        <div className="panel relative p-8 sm:p-9">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+    <div className="page-shell max-w-4xl pb-10">
+      <div className="auth-shell">
+        <div className="border-b border-slate-100 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 px-6 py-5 sm:px-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-200">
+            Join RoomieMatch
+          </p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Set up your profile
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Account basics plus the habits and boundaries that actually decide
-            whether a share works—so we can match on criteria, not just rent.
+          <p className="mt-2 max-w-xl text-sm text-slate-300">
+            Account basics plus lifestyle preferences so matching feels real—not random.
           </p>
+        </div>
 
-          <div className="mt-6 panel-muted p-4">
+        <div className="p-6 sm:p-8">
+          <div className="rounded-2xl border border-slate-200/80 bg-slate-50 p-4">
             <div className="mb-2 flex items-center justify-between">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-600">
                 Profile progress
