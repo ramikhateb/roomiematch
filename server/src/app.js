@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import apartmentRoutes from './routes/apartmentRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 const app = express()
 
@@ -12,5 +13,6 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/apartments', apartmentRoutes)
+app.use('/api/users', userRoutes)
 
 export default app
