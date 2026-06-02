@@ -1,73 +1,124 @@
-# React + TypeScript + Vite
+# RoomieMatch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+RoomieMatch is a full-stack web app for finding compatible roommates and exploring apartments together.  
+Instead of matching only by budget, it uses lifestyle preferences (sleep schedule, cleanliness, smoking, pets, and housing situation) to help users discover better-fit people before choosing a home.
 
-Currently, two official plugins are available:
+## What The App Does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- User registration and login
+- Profile management (including profile photo)
+- Roommate discovery feed and filter-based search
+- Compatibility scoring between users
+- Apartment browsing with filters and map view
+- Save/unsave apartments and view liked apartments in profile
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend (`client/`)
 
-## Expanding the ESLint configuration
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS 4
+- Framer Motion (animations)
+- React Router
+- Leaflet + React Leaflet (map and markers)
+- Lucide React (icons)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend (`server/`)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js + Express
+- Prisma ORM
+- PostgreSQL
+- Prisma seed/migrations for demo data
+- JWT / bcrypt dependencies prepared for auth workflows
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Project Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+roomiematch/
+  client/   # React frontend
+  server/   # Express + Prisma backend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1) Install dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# frontend
+cd client
+npm install
+
+# backend
+cd ../server
+npm install
 ```
+
+### 2) Configure environment variables
+
+Create `server/.env` with your database connection:
+
+```env
+DATABASE_URL="postgresql://<user>@127.0.0.1:5432/<database>?schema=public"
+PORT=5001
+```
+
+### 3) Run database migrations and seed
+
+From `server/`:
+
+```bash
+npx prisma migrate deploy
+npx prisma db seed
+```
+
+### 4) Start the app
+
+In separate terminals:
+
+```bash
+# backend
+cd server
+npm run dev
+```
+
+```bash
+# frontend
+cd client
+npm run dev
+```
+
+Then open: `http://localhost:5173`
+
+## Available Scripts
+
+### Frontend
+
+- `npm run dev` - start Vite dev server
+- `npm run build` - production build
+- `npm run lint` - lint frontend code
+- `npm run preview` - preview production build
+
+### Backend
+
+- `npm run dev` - start API with nodemon
+- `npm run start` - start API in production mode
+- `npm run prisma:migrate` - create/apply Prisma migrations (dev)
+- `npm run prisma:seed` - seed demo users/apartments
+- `npm run prisma:studio` - open Prisma Studio
+
+## API Overview
+
+- `GET /api/health` - health check
+- `GET /api/apartments` - list apartments (supports filter query params)
+- `POST /api/apartments` - create apartment
+- `GET /api/users` - list users for roommate matching
+
+## Notes
+
+- Roommate search and profile session behavior in the UI currently relies on local storage for the logged-in user session.
+- The backend provides apartment and user data via Prisma/PostgreSQL.
+
+---
+
+If you want, I can also add a section with sample screenshots and a short product demo flow.
