@@ -90,29 +90,6 @@ npm run dev
 
 Then open: `http://localhost:5173`
 
-## Available Scripts
-
-### Frontend
-
-- `npm run dev` - start Vite dev server
-- `npm run build` - production build
-- `npm run lint` - lint frontend code
-- `npm run preview` - preview production build
-
-### Backend
-
-- `npm run dev` - start API with nodemon
-- `npm run start` - start API in production mode
-- `npm run prisma:migrate` - create/apply Prisma migrations (dev)
-- `npm run prisma:seed` - seed demo users/apartments
-- `npm run prisma:studio` - open Prisma Studio
-
-## API Overview
-
-- `GET /api/health` - health check
-- `GET /api/apartments` - list apartments (supports filter query params)
-- `POST /api/apartments` - create apartment
-- `GET /api/users` - list users for roommate matching
 
 ## Notes
 
